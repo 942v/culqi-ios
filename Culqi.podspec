@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Culqi'
-  s.version          = '1.0'
+  s.version          = '2.0'
   s.summary          = 'A short description of Culqi.'
 
 # This description is used to generate tags and improve search results.
@@ -32,13 +32,26 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'Culqi/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'Culqi' => ['Culqi/Assets/*.png']
-  # }
+  s.default_subspecs= [
+    "Core"
+  ]
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'AFNetworking'#, '~> 2.3'
+  s.subspec "Models" do |ss|
+    ss.source_files = 'Culqi/CLQ{BaseModelObject,Token,IssuerIdentificationNumber,CardIssuer,Client,Card,TokenCard}.{h,m}'
+    ss.public_header_files = 'Culqi/CLQ{BaseModelObject,Token,IssuerIdentificationNumber,CardIssuer,Client,Card,TokenCard}.h'
+  end
+
+  s.subspec "Networking" do |ss|
+    ss.dependency 'Culqi/Models'
+    ss.dependency 'AFNetworking'#, '~> 2.3'
+    ss.source_files = 'Culqi/CLQ{HTTPSessionManager,WebServices}.{h,m}'
+    ss.public_header_files = 'Culqi/CLQ{HTTPSessionManager,WebServices}.h'
+  end
+
+  s.subspec "Core" do |ss|
+    ss.dependency 'Culqi/Networking'
+    ss.source_files = 'Culqi/Culqi.{h,m}'
+    ss.public_header_files = 'Culqi/Culqi.h'
+  end
+
 end

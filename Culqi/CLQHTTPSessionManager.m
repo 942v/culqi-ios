@@ -1,9 +1,9 @@
 //
 //  CLQHTTPSessionManager.m
-//  
+//  Culqi
 //
-//  Created by Guillermo Saenz on 9/18/16.
-//  Copyright (c) 2016 Guillermo Saenz. All rights reserved.
+//  Created by Guillermo Sáenz on 9/18/16.
+//  Copyright (c) 2016 Guillermo Sáenz. All rights reserved.
 //
 
 #import "CLQHTTPSessionManager.h"
@@ -76,12 +76,9 @@ static bool isFirstAccess = YES;
         [self setRequestSerializer:[AFJSONRequestSerializer serializer]];
         [self setResponseSerializer:[AFJSONResponseSerializer serializer]];
         
-        [self.requestSerializer setTimeoutInterval:60.0];
-        
         [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
         
         [self.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [self.responseSerializer setAcceptableContentTypes:[self.responseSerializer.acceptableContentTypes setByAddingObjectsFromArray:@[@"text/html", @"application/x-www-form-urlencoded"]]];
     }
     return self;
 }

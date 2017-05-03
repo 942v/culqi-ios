@@ -1,22 +1,24 @@
 //
 //  Culqi.m
-//  payments
+//  Culqi
 //
-//  Created by William Muro on 9/11/16.
-//  Copyright © 2016 May. All rights reserved.
+//  Created by Guillermo Sáenz on 5/2/17.
+//  Copyright (c) 2017 Guillermo Sáenz. All rights reserved.
 //
 
 #import "Culqi.h"
 
 #import "CLQHTTPSessionManager.h"
+
 #import "CLQWebServices.h"
+
 #import "CLQCard.h"
 #import "CLQToken.h"
 #import "CLQTokenCard.h"
 
 @implementation Culqi
 
-static NSString *CLQCheckoutBaseURLString = @"https://integ-pago.culqi.com/api/v1/";
+static NSString *CLQCheckoutBaseURLString = @"https://api.culqi.com/v2/";
 
 static Culqi *SINGLETON = nil;
 

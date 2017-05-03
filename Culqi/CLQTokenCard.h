@@ -1,15 +1,15 @@
 //
 //  CLQTokenCard.h
-//  payments
+//  Culqi
 //
-//  Created by William Muro on 9/11/16.
-//  Copyright © 2016 May. All rights reserved.
+//  Created by Guillermo Sáenz on 5/2/17.
+//  Copyright (c) 2017 Guillermo Sáenz. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "CLQBaseModelObject.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@interface CLQTokenCard : NSObject
+@interface CLQTokenCard : CLQBaseModelObject
 
 @property (nonatomic, readonly) NSString *brand;
 @property (nonatomic, readonly) NSString *number;

@@ -1,9 +1,9 @@
 //
 //  Culqi.h
-//  payments
+//  Culqi
 //
-//  Created by William Muro on 9/11/16.
-//  Copyright © 2016 May. All rights reserved.
+//  Created by Guillermo Sáenz on 5/2/17.
+//  Copyright (c) 2017 Guillermo Sáenz. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -14,7 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface Culqi : NSObject
 
-@property (nonatomic, readonly) NSString *merchantCode;
+@property (nonatomic, copy, readonly) NSString *merchantCode;
 
 /**
  * gets singleton object.
