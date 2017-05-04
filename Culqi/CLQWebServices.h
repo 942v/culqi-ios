@@ -47,5 +47,18 @@ NS_ASSUME_NONNULL_BEGIN
                                   success:(void (^)(NSDictionary *responseObject))success
                                   failure:(void (^)(NSError *error))failure;
 
+#pragma mark - Plans
+
++ (void)createPlanName:(NSString *)name
+                amount:(NSNumber *)amount
+          currencyCode:(NSString *)currencyCode
+              interval:(NSString *)interval // TODO: Ask devs
+         intervalCount:(NSNumber *)intervalCount
+             trialDays:(NSNumber *)trialDays
+                 limit:(NSNumber *)limit
+              metadata:(NSDictionary *)metadata
+               success:(void (^)(NSDictionary *responseObject))success
+               failure:(void (^)(NSError *error))failure;
+
 @end
 NS_ASSUME_NONNULL_END

@@ -101,4 +101,35 @@
     }];
 }
 
+#pragma mark - Plans
+
++ (void)createPlanName:(NSString *)name
+                amount:(NSNumber *)amount
+          currencyCode:(NSString *)currencyCode
+              interval:(NSString *)interval
+         intervalCount:(NSNumber *)intervalCount
+             trialDays:(NSNumber *)trialDays
+                 limit:(NSNumber *)limit
+              metadata:(NSDictionary *)metadata
+               success:(void (^)(NSDictionary * _Nonnull))success
+               failure:(void (^)(NSError * _Nonnull))failure {
+    
+    NSDictionary *parameters = @{
+                                 @"name":name,
+                                 @"amount":amount,
+                                 @"currencyCode":currencyCode,
+                                 @"interval":interval,
+                                 @"intervalCount":intervalCount,
+                                 @"trialDays":trialDays,
+                                 @"limit":limit,
+                                 @"metadata":metadata,
+                                 };
+    
+    [[CLQHTTPSessionManager manager] POST:@"plans" parameters:parameters progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
 @end
