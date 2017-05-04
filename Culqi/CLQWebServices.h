@@ -124,5 +124,11 @@ NS_ASSUME_NONNULL_BEGIN
                              success:(void (^)())success
                              failure:(void (^)(NSError *error))failure;
 
+#pragma mark - Charges
+
+#pragma mark - Subscriptions
+
+#pragma mark - Cards
+
 @end
 NS_ASSUME_NONNULL_END
