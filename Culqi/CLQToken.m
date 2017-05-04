@@ -9,7 +9,7 @@
 #import "CLQToken.h"
 
 #import "CLQIssuerIdentificationNumber.h"
-#import "CLQClient.h"
+#import "CLQTokenClient.h"
 
 @implementation CLQToken
 
@@ -42,8 +42,8 @@
         if ([cardNumber isKindOfClass:[NSString class]])_cardNumber = cardNumber;
         if ([cardLastFourNumbers isKindOfClass:[NSString class]])_cardLastFourNumbers = cardLastFourNumbers;
         if ([active isKindOfClass:[NSNumber class]])_active = active.boolValue;
-        if ([iinData isKindOfClass:[NSString class]])_iin = [CLQIssuerIdentificationNumber newWithData:iinData];
-        if ([clientData isKindOfClass:[NSDictionary class]])_client = [CLQClient newWithData:clientData];
+        if ([iinData isKindOfClass:[NSDictionary class]])_iin = [CLQIssuerIdentificationNumber newWithData:iinData];
+        if ([clientData isKindOfClass:[NSDictionary class]])_client = [CLQTokenClient newWithData:clientData];
         if ([metadata isKindOfClass:[NSDictionary class]])_metadata = metadata;
     }
     return self;

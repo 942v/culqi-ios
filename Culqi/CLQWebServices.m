@@ -46,9 +46,9 @@
     }];
 }
 
-+ (void)getTokenInfoWithIdentifier:(NSString *)identifier
-                           success:(void (^)(NSDictionary * _Nonnull))success
-                           failure:(void (^)(NSError * _Nonnull))failure {
++ (void)getTokenWithIdentifier:(NSString *)identifier
+                       success:(void (^)(NSDictionary * _Nonnull))success
+                       failure:(void (^)(NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] GET:[@"tokens" stringByAppendingFormat:@"/%@", identifier] parameters:NULL progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success (responseObject);
@@ -127,6 +127,69 @@
     
     [[CLQHTTPSessionManager manager] POST:@"plans" parameters:parameters progress:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)getPlanWithIdentifier:(NSString *)identifier
+                      success:(void (^)(NSDictionary * _Nonnull))success
+                      failure:(void (^)(NSError * _Nonnull))failure {
+    
+    [[CLQHTTPSessionManager manager] GET:[@"plans" stringByAppendingFormat:@"/%@", identifier] parameters:NULL progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)getPlansWithAmount:(NSNumber *)amount
+                 minAmount:(NSNumber *)minAmount
+                 maxAmount:(NSNumber *)maxAmount
+              fromUnixDate:(NSNumber *)fromUnixDate
+                toUnixDate:(NSNumber *)toUnixDate
+                     limit:(NSNumber *)limit
+      beforePlanIdentifier:(NSString *)beforePlanIdentifier
+       afterPlanIdentifier:(NSString *)afterPlanIdentifier
+                   success:(void (^)(NSDictionary * _Nonnull))success
+                   failure:(void (^)(NSError * _Nonnull))failure {
+    
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    
+    if (amount) [parameters setObject:amount forKey:@"amount"];
+    if (minAmount) [parameters setObject:minAmount forKey:@"min_amount"];
+    if (maxAmount) [parameters setObject:maxAmount forKey:@"max_amount"];
+    if (fromUnixDate) [parameters setObject:fromUnixDate forKey:@"date_from"];
+    if (toUnixDate) [parameters setObject:toUnixDate forKey:@"date_to"];
+    if (limit) [parameters setObject:limit forKey:@"limit"];
+    if (beforePlanIdentifier) [parameters setObject:beforePlanIdentifier forKey:@"before"];
+    if (afterPlanIdentifier) [parameters setObject:afterPlanIdentifier forKey:@"after"];
+    
+    [[CLQHTTPSessionManager manager] GET:@"plans" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)updatePlanMetadataWithIdentifier:(NSString *)identifier
+                                 success:(void (^)(NSDictionary * _Nonnull))success
+                                 failure:(void (^)(NSError * _Nonnull))failure {
+    
+    [[CLQHTTPSessionManager manager] PATCH:[@"plans" stringByAppendingFormat:@"/%@", identifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)deletePlanWithIdentifier:(NSString *)identifier
+                         success:(void (^)())success
+                         failure:(void (^)(NSError * _Nonnull))failure {
+    
+    [[CLQHTTPSessionManager manager] DELETE:[@"plans" stringByAppendingFormat:@"/%@", identifier] parameters:NULL success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success ();// TODO: shouldn't this be a 204?
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) failure(error);
     }];

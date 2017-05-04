@@ -26,9 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
                           success:(void (^)(NSDictionary *responseObject))success
                           failure:(void (^)(NSError *error))failure;
 
-+ (void)getTokenInfoWithIdentifier:(NSString *)identifier
-                           success:(void (^)(NSDictionary *responseObject))success
-                           failure:(void (^)(NSError *error))failure;
++ (void)getTokenWithIdentifier:(NSString *)identifier
+                       success:(void (^)(NSDictionary *responseObject))success
+                       failure:(void (^)(NSError *error))failure;
 
 + (void)getTokensWithFromUnixDate:(NSNumber *)fromUnixDate
                        toUnixDate:(NSNumber *)toUnixDate
@@ -59,6 +59,29 @@ NS_ASSUME_NONNULL_BEGIN
               metadata:(NSDictionary *)metadata
                success:(void (^)(NSDictionary *responseObject))success
                failure:(void (^)(NSError *error))failure;
+
++ (void)getPlanWithIdentifier:(NSString *)identifier
+                      success:(void (^)(NSDictionary *responseObject))success
+                      failure:(void (^)(NSError *error))failure;
+
++ (void)getPlansWithAmount:(NSNumber *)amount
+                 minAmount:(NSNumber *)minAmount
+                 maxAmount:(NSNumber *)maxAmount
+              fromUnixDate:(NSNumber *)fromUnixDate
+                toUnixDate:(NSNumber *)toUnixDate
+                     limit:(NSNumber *)limit
+      beforePlanIdentifier:(NSString *)beforePlanIdentifier
+       afterPlanIdentifier:(NSString *)afterPlanIdentifier
+                   success:(void (^)(NSDictionary *responseObject))success
+                   failure:(void (^)(NSError *error))failure;
+
++ (void)updatePlanMetadataWithIdentifier:(NSString *)identifier
+                                 success:(void (^)(NSDictionary *responseObject))success
+                                 failure:(void (^)(NSError *error))failure;
+
++ (void)deletePlanWithIdentifier:(NSString *)identifier
+                         success:(void (^)())success
+                         failure:(void (^)(NSError *error))failure;
 
 @end
 NS_ASSUME_NONNULL_END
