@@ -9,7 +9,7 @@
 #import "CLQToken.h"
 
 #import "CLQIssuerIdentificationNumber.h"
-#import "CLQTokenClient.h"
+#import "CLQClient.h"
 
 @implementation CLQToken
 

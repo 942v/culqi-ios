@@ -8,30 +8,30 @@
 
 #import "CLQClient.h"
 
-#import "CLQAntifraudDetails.h"
-
 @implementation CLQClient
 
 + (instancetype)newWithData:(NSDictionary *)data {
     
-    NSString *object = [data objectForKey:@"object"];
-    NSString *identifier = [data objectForKey:@"id"];
-    NSNumber *creationDate = [data objectForKey:@"creation_date"];
-    NSString *email = [data objectForKey:@"email"];
-    NSDictionary *antifraudDetailsData = [data objectForKey:@"antifraud_details"];
+    NSString *ip = [data objectForKey:@"ip"];
+    NSString *ipCountry = [data objectForKey:@"ip_country"];
+    NSString *ipCountryCode = [data objectForKey:@"ip_country_code"];
+    NSString *browser = [data objectForKey:@"browser"];
+    NSString *deviceFingerprint = [data objectForKey:@"device_fingerprint"];
+    NSString *deviceType = [data objectForKey:@"device_type"];
     
-    return [[CLQClient alloc] initWithObject:object identifier:identifier creationDate:creationDate email:email antifraudDetailsData:antifraudDetailsData];
+    return [[CLQClient alloc] initWithIP:ip ipCountry:ipCountry ipCountryCode:ipCountryCode browser:browser deviceFingerprint:deviceFingerprint deviceType:deviceType];
 }
 
-- (instancetype)initWithObject:(NSString *)object identifier:(NSString *)identifier creationDate:(NSNumber *)creationDate email:(NSString *)email antifraudDetailsData:(NSDictionary *)antifraudDetailsData {
+- (instancetype)initWithIP:(NSString *)ip ipCountry:(NSString *)ipCountry ipCountryCode:(NSString *)ipCountryCode browser:(NSString *)browser deviceFingerprint:(NSString *)deviceFingerprint deviceType:(NSString *)deviceType {
     
     self = [super init];
     if (self) {
-        if ([object isKindOfClass:[NSString class]])_object = object;
-        if ([identifier isKindOfClass:[NSString class]])_identifier = identifier;
-        if ([creationDate isKindOfClass:[NSNumber class]])_creationDate = [NSDate dateWithTimeIntervalSince1970:creationDate.doubleValue];
-        if ([email isKindOfClass:[NSString class]])_email = email;
-        if ([antifraudDetailsData isKindOfClass:[NSDictionary class]])_antifraudDetails = [CLQAntifraudDetails newWithData:antifraudDetailsData];
+        if ([ip isKindOfClass:[NSString class]])_ip = ip;
+        if ([ipCountry isKindOfClass:[NSString class]])_ipCountry = ipCountry;
+        if ([ipCountryCode isKindOfClass:[NSString class]])_ipCountryCode = ipCountryCode;
+        if ([browser isKindOfClass:[NSString class]])_browser = browser;
+        if ([deviceFingerprint isKindOfClass:[NSString class]])_deviceFingerprint = deviceFingerprint;
+        if ([deviceType isKindOfClass:[NSString class]])_deviceType = deviceType;
     }
     return self;
 }
@@ -41,21 +41,23 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super init];
     if (self) {
-        _object = [aDecoder decodeObjectOfClass:[self class] forKey:@"object"];
-        _identifier = [aDecoder decodeObjectOfClass:[self class] forKey:@"identifier"];
-        _creationDate = [aDecoder decodeObjectOfClass:[self class] forKey:@"creationDate"];
-        _email = [aDecoder decodeObjectOfClass:[self class] forKey:@"email"];
-        _antifraudDetails = [aDecoder decodeObjectOfClass:[self class] forKey:@"antifraudDetails"];
+        _ip = [aDecoder decodeObjectOfClass:[self class] forKey:@"ip"];
+        _ipCountry = [aDecoder decodeObjectOfClass:[self class] forKey:@"ipCountry"];
+        _ipCountryCode = [aDecoder decodeObjectOfClass:[self class] forKey:@"ipCountryCode"];
+        _browser = [aDecoder decodeObjectOfClass:[self class] forKey:@"browser"];
+        _deviceFingerprint = [aDecoder decodeObjectOfClass:[self class] forKey:@"deviceFingerprint"];
+        _deviceType = [aDecoder decodeObjectOfClass:[self class] forKey:@"deviceType"];
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:_object forKey:@"object"];
-    [aCoder encodeObject:_identifier forKey:@"identifier"];
-    [aCoder encodeObject:_creationDate forKey:@"creationDate"];
-    [aCoder encodeObject:_email forKey:@"email"];
-    [aCoder encodeObject:_antifraudDetails forKey:@"antifraudDetails"];
+    [aCoder encodeObject:_ip forKey:@"ip"];
+    [aCoder encodeObject:_ipCountry forKey:@"ipCountry"];
+    [aCoder encodeObject:_ipCountryCode forKey:@"ipCountryCode"];
+    [aCoder encodeObject:_browser forKey:@"browser"];
+    [aCoder encodeObject:_deviceFingerprint forKey:@"deviceFingerprint"];
+    [aCoder encodeObject:_deviceType forKey:@"deviceType"];
 }
 
 @end

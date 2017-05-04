@@ -8,7 +8,7 @@
 
 #import "CLQBaseModelObject.h"
 
-@class CLQIssuerIdentificationNumber, CLQTokenClient;
+@class CLQIssuerIdentificationNumber, CLQClient;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface CLQToken : CLQBaseModelObject
@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *cardLastFourNumbers;
 @property (nonatomic, assign, readonly, getter=isActive) BOOL active;
 @property (nonatomic, strong, readonly) CLQIssuerIdentificationNumber *iin;
-@property (nonatomic, strong, readonly) CLQTokenClient *client;
+@property (nonatomic, strong, readonly) CLQClient *client;
 @property (nonatomic, strong, readonly) NSDictionary *metadata;
 
 @end

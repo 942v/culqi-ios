@@ -44,21 +44,22 @@ NS_ASSUME_NONNULL_BEGIN
                           failure:(void (^)(NSError *error))failure;
 
 + (void)updateTokenMetadataWithIdentifier:(NSString *)identifier
+                                 metadata:(NSDictionary *)metadata
                                   success:(void (^)(NSDictionary *responseObject))success
                                   failure:(void (^)(NSError *error))failure;
 
 #pragma mark - Plans
 
-+ (void)createPlanName:(NSString *)name
-                amount:(NSNumber *)amount
-          currencyCode:(NSString *)currencyCode
-              interval:(NSString *)interval // TODO: Ask devs
-         intervalCount:(NSNumber *)intervalCount
-             trialDays:(NSNumber *)trialDays
-                 limit:(NSNumber *)limit
-              metadata:(NSDictionary *)metadata
-               success:(void (^)(NSDictionary *responseObject))success
-               failure:(void (^)(NSError *error))failure;
++ (void)createPlanWithName:(NSString *)name
+                    amount:(NSNumber *)amount
+              currencyCode:(NSString *)currencyCode
+                  interval:(NSString *)interval // TODO: Ask devs
+             intervalCount:(NSNumber *)intervalCount
+                 trialDays:(NSNumber *)trialDays
+                     limit:(NSNumber *)limit
+                  metadata:(NSDictionary *)metadata
+                   success:(void (^)(NSDictionary *responseObject))success
+                   failure:(void (^)(NSError *error))failure;
 
 + (void)getPlanWithIdentifier:(NSString *)identifier
                       success:(void (^)(NSDictionary *responseObject))success
@@ -76,12 +77,52 @@ NS_ASSUME_NONNULL_BEGIN
                    failure:(void (^)(NSError *error))failure;
 
 + (void)updatePlanMetadataWithIdentifier:(NSString *)identifier
+                                metadata:(NSDictionary *)metadata
                                  success:(void (^)(NSDictionary *responseObject))success
                                  failure:(void (^)(NSError *error))failure;
 
 + (void)deletePlanWithIdentifier:(NSString *)identifier
                          success:(void (^)())success
                          failure:(void (^)(NSError *error))failure;
+
+#pragma mark - Customers
+
++ (void)createCustomerWithFirstName:(NSString *)firstName
+                           lastName:(NSString *)lastName
+                              email:(NSString *)email
+                            address:(NSString *)address
+                        addressCity:(NSString *)addressCity
+                        countryCode:(NSString *)countryCode
+                        phoneNumber:(NSString *)phoneNumber
+                           metadata:(NSDictionary *)metadata
+                            success:(void (^)(NSDictionary *responseObject))success
+                            failure:(void (^)(NSError *error))failure;
+
++ (void)getCustomerWithIdentifier:(NSString *)identifier
+                          success:(void (^)(NSDictionary *responseObject))success
+                          failure:(void (^)(NSError *error))failure;
+
++ (void)getCustomersWithFirstName:(NSString *)firstName
+                         lastName:(NSString *)lastName
+                            email:(NSString *)email
+                          address:(NSString *)address
+                      addressCity:(NSString *)addressCity
+                      phoneNumber:(NSString *)phoneNumber
+                      countryCode:(NSString *)countryCode
+                            limit:(NSNumber *)limit
+         beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
+          afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
+                          success:(void (^)(NSDictionary *responseObject))success
+                          failure:(void (^)(NSError *error))failure;
+
++ (void)updateCustomerMetadataWithIdentifier:(NSString *)identifier
+                                    metadata:(NSDictionary *)metadata
+                                     success:(void (^)(NSDictionary *responseObject))success
+                                     failure:(void (^)(NSError *error))failure;
+
++ (void)deleteCustomerWithIdentifier:(NSString *)identifier
+                             success:(void (^)())success
+                             failure:(void (^)(NSError *error))failure;
 
 @end
 NS_ASSUME_NONNULL_END

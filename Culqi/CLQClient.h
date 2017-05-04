@@ -8,14 +8,13 @@
 
 #import "CLQBaseModelObject.h"
 
-@class CLQAntifraudDetails;
-
 @interface CLQClient : CLQBaseModelObject
 
-@property (nonatomic, copy, readonly) NSString *object;
-@property (nonatomic, copy, readonly) NSString *identifier;
-@property (nonatomic, strong, readonly) NSDate *creationDate;
-@property (nonatomic, copy, readonly) NSString *email;
-@property (nonatomic, strong, readonly) CLQAntifraudDetails *antifraudDetails;
+@property (nonatomic, copy, readonly) NSString *ip;
+@property (nonatomic, copy, readonly) NSString *ipCountry;
+@property (nonatomic, copy, readonly) NSString *ipCountryCode;
+@property (nonatomic, copy, readonly) NSString *browser;
+@property (nonatomic, copy, readonly) NSString *deviceFingerprint;
+@property (nonatomic, copy, readonly) NSString *deviceType;
 
 @end
