@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class CLQAntifraudDetails;
+
 NS_ASSUME_NONNULL_BEGIN
 @interface CLQWebServices : NSObject
 
@@ -125,6 +127,68 @@ NS_ASSUME_NONNULL_BEGIN
                              failure:(void (^)(NSError *error))failure;
 
 #pragma mark - Charges
+
++ (void)createChargeWithAmount:(NSNumber *)amount
+                  currencyCode:(NSString *)currencyCode
+                         email:(NSString *)email
+              antifraudDetails:(CLQAntifraudDetails *)antifraudDetails
+              sourceIdentifier:(NSString *)sourceIdentifier
+                       success:(void (^)(NSDictionary *responseObject))success
+                       failure:(void (^)(NSError *error))failure;
+
++ (void)getChargeWithIdentifier:(NSString *)chargeIdentifier
+                        success:(void (^)(NSDictionary *responseObject))success
+                        failure:(void (^)(NSError *error))failure;
+
++ (void)getChargesWithAmount:(NSNumber *)amount
+               minimumAmount:(NSNumber *)minimumAmount
+               maximumAmount:(NSNumber *)maximumAmount
+                installments:(NSNumber *)installments
+         minimumInstallments:(NSNumber *)minimumInstallments
+         maximumInstallments:(NSNumber *)maximumInstallments
+                currencyCode:(NSString *)currencyCode
+                        code:(NSString *)code
+                declinedCode:(NSString *)declinedCode
+                  fraudScore:(NSNumber *)fraudScore
+           minimumFraudScore:(NSNumber *)minimumFraudScore
+           maximumFraudScore:(NSNumber *)maximumFraudScore
+                   firstName:(NSString *)firstName
+                    lastName:(NSString *)lastName
+                       email:(NSString *)email
+                     address:(NSString *)address
+                 addressCity:(NSString *)addressCity
+                 phoneNumber:(NSString *)phoneNumber
+                 countryCode:(NSString *)countryCode
+                    disputed:(NSNumber *)disputed
+                    captured:(NSNumber *)captured
+                  duplicated:(NSNumber *)duplicated
+                        paid:(NSNumber *)paid
+          customerIdentifier:(NSString *)customerIdentifier
+               referenceCode:(NSString *)referenceCode
+                    unixDate:(NSNumber *)unixDate
+                fromUnixDate:(NSNumber *)fromUnixDate
+                  toUnixDate:(NSNumber *)toUnixDate
+                         fee:(NSNumber *)fee
+                  minimumFee:(NSNumber *)minimumFee
+                  maximumFee:(NSNumber *)maximumFee
+                   cardBrand:(NSString *)cardBrand
+                    cardType:(NSString *)cardType
+                  deviceType:(NSString *)deviceType
+                         bin:(NSNumber *)bin
+                       limit:(NSNumber *)limit
+      beforeChargeIdentifier:(NSString *)beforeChargeIdentifier
+       afterChargeIdentifier:(NSString *)afterChargeIdentifier
+                     success:(void (^)(NSDictionary *responseObject))success
+                     failure:(void (^)(NSError *error))failure;
+
++ (void)updateChargeWithIdentifier:(NSString *)chargeIdentifier
+                          metadata:(NSDictionary *)metadata
+                           success:(void (^)(NSDictionary *responseObject))success
+                           failure:(void (^)(NSError *error))failure;
+
++ (void)deleteChargeWithIdentifier:(NSString *)chargeIdentifier
+                           success:(void (^)())success
+                           failure:(void (^)(NSError *error))failure;
 
 #pragma mark - Subscriptions
 
