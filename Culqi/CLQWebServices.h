@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
                           success:(void (^)(NSDictionary *responseObject))success
                           failure:(void (^)(NSError *error))failure;
 
-+ (void)getTokenWithIdentifier:(NSString *)identifier
++ (void)getTokenWithIdentifier:(NSString *)tokenIdentifier
                        success:(void (^)(NSDictionary *responseObject))success
                        failure:(void (^)(NSError *error))failure;
 
@@ -43,10 +43,10 @@ NS_ASSUME_NONNULL_BEGIN
                           success:(void (^)(NSDictionary *responseObject))success
                           failure:(void (^)(NSError *error))failure;
 
-+ (void)updateTokenMetadataWithIdentifier:(NSString *)identifier
-                                 metadata:(NSDictionary *)metadata
-                                  success:(void (^)(NSDictionary *responseObject))success
-                                  failure:(void (^)(NSError *error))failure;
++ (void)updateTokenWithIdentifier:(NSString *)tokenIdentifier
+                         metadata:(NSDictionary *)metadata
+                          success:(void (^)(NSDictionary *responseObject))success
+                          failure:(void (^)(NSError *error))failure;
 
 #pragma mark - Plans
 
@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
                    success:(void (^)(NSDictionary *responseObject))success
                    failure:(void (^)(NSError *error))failure;
 
-+ (void)getPlanWithIdentifier:(NSString *)identifier
++ (void)getPlanWithIdentifier:(NSString *)planIdentifier
                       success:(void (^)(NSDictionary *responseObject))success
                       failure:(void (^)(NSError *error))failure;
 
@@ -76,12 +76,12 @@ NS_ASSUME_NONNULL_BEGIN
                    success:(void (^)(NSDictionary *responseObject))success
                    failure:(void (^)(NSError *error))failure;
 
-+ (void)updatePlanMetadataWithIdentifier:(NSString *)identifier
-                                metadata:(NSDictionary *)metadata
-                                 success:(void (^)(NSDictionary *responseObject))success
-                                 failure:(void (^)(NSError *error))failure;
++ (void)updatePlanWithIdentifier:(NSString *)planIdentifier
+                        metadata:(NSDictionary *)metadata
+                         success:(void (^)(NSDictionary *responseObject))success
+                         failure:(void (^)(NSError *error))failure;
 
-+ (void)deletePlanWithIdentifier:(NSString *)identifier
++ (void)deletePlanWithIdentifier:(NSString *)planIdentifier
                          success:(void (^)())success
                          failure:(void (^)(NSError *error))failure;
 
@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
                             success:(void (^)(NSDictionary *responseObject))success
                             failure:(void (^)(NSError *error))failure;
 
-+ (void)getCustomerWithIdentifier:(NSString *)identifier
++ (void)getCustomerWithIdentifier:(NSString *)customerIdentifier
                           success:(void (^)(NSDictionary *responseObject))success
                           failure:(void (^)(NSError *error))failure;
 
@@ -115,12 +115,12 @@ NS_ASSUME_NONNULL_BEGIN
                           success:(void (^)(NSDictionary *responseObject))success
                           failure:(void (^)(NSError *error))failure;
 
-+ (void)updateCustomerMetadataWithIdentifier:(NSString *)identifier
-                                    metadata:(NSDictionary *)metadata
-                                     success:(void (^)(NSDictionary *responseObject))success
-                                     failure:(void (^)(NSError *error))failure;
++ (void)updateCustomerWithIdentifier:(NSString *)customerIdentifier
+                            metadata:(NSDictionary *)metadata
+                             success:(void (^)(NSDictionary *responseObject))success
+                             failure:(void (^)(NSError *error))failure;
 
-+ (void)deleteCustomerWithIdentifier:(NSString *)identifier
++ (void)deleteCustomerWithIdentifier:(NSString *)customerIdentifier
                              success:(void (^)())success
                              failure:(void (^)(NSError *error))failure;
 
@@ -129,6 +129,40 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Subscriptions
 
 #pragma mark - Cards
+
++ (void)createCardWithIdentifier:(NSString *)customerIdentifier
+                 tokenIdentifier:(NSString *)tokenIdentifier
+                  shouldValidate:(BOOL)shouldValidate
+                        metadata:(NSDictionary *)metadata
+                         success:(void (^)(NSDictionary *responseObject))success
+                         failure:(void (^)(NSError *error))failure;
+
++ (void)getCardWithIdentifier:(NSString *)cardIdentifier
+                      success:(void (^)(NSDictionary *responseObject))success
+                      failure:(void (^)(NSError *error))failure;
+
++ (void)getCardsWithDate:(NSNumber *)date
+            fromUnixDate:(NSNumber *)fromUnixDate
+              toUnixDate:(NSNumber *)toUnixDate
+               cardBrand:(NSString *)cardBrand
+                cardType:(NSString *)cardType
+              deviceType:(NSString *)deviceType
+                     bin:(NSString *)bin
+             countryCode:(NSString *)countryCode
+                   limit:(NSNumber *)limit
+beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
+ afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
+                 success:(void (^)(NSDictionary *responseObject))success
+                 failure:(void (^)(NSError *error))failure;
+
++ (void)updateCardWithIdentifier:(NSString *)cardIdentifier
+                        metadata:(NSDictionary *)metadata
+                         success:(void (^)(NSDictionary *responseObject))success
+                         failure:(void (^)(NSError *error))failure;
+
++ (void)deleteCardWithIdentifier:(NSString *)cardIdentifier
+                         success:(void (^)())success
+                         failure:(void (^)(NSError *error))failure;
 
 @end
 NS_ASSUME_NONNULL_END

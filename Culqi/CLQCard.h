@@ -8,34 +8,18 @@
 
 #import "CLQBaseModelObject.h"
 
+@class CLQToken, CLQClient;
+
 NS_ASSUME_NONNULL_BEGIN
 @interface CLQCard : CLQBaseModelObject
 
-@property (nonatomic, readonly) NSNumber *number;
-@property (nonatomic, readonly) NSNumber *cvc;
-@property (nonatomic, readonly) NSNumber *expMonth;
-@property (nonatomic, readonly) NSNumber *expYear;
-@property (nonatomic, readonly) NSString *firstName;
-@property (nonatomic, readonly) NSString *lastName;
-@property (nonatomic, readonly) NSString *email;
-
-- (instancetype)initWithNumber:(NSNumber *)number
-                           CVC:(NSNumber *)cvc
-                      expMonth:(NSNumber *)expMonth
-                       expYear:(NSNumber *)expYear
-                     firstName:(NSString *)firstName
-                      lastName:(NSString *)lastName
-                         email:(NSString *)email;
-
-+ (instancetype)newWithNumber:(NSNumber *)number
-                          CVC:(NSNumber *)cvc
-                     expMonth:(NSNumber *)expMonth
-                      expYear:(NSNumber *)expYear
-                    firstName:(NSString *)firstName
-                     lastName:(NSString *)lastName
-                        email:(NSString *)email;
-
-- (void)drive;
+@property (nonatomic, copy, readonly) NSString *object;
+@property (nonatomic, copy, readonly) NSString *identifier;
+@property (nonatomic, strong, readonly) NSDate *date;
+@property (nonatomic, copy, readonly) NSString *customerIdentifier;
+@property (nonatomic, strong, readonly) CLQToken *tokenSource;
+@property (nonatomic, strong, readonly) CLQClient *client;
+@property (nonatomic, strong, readonly) NSDictionary *metadata;
 
 @end
 NS_ASSUME_NONNULL_END

@@ -17,7 +17,7 @@
 @property (nonatomic, copy, readonly) NSString *cardBrand;
 @property (nonatomic, copy, readonly) NSString *cardType;
 @property (nonatomic, copy, readonly) NSString *cardCategory;
-@property (nonatomic, copy, readonly) CLQCardIssuer *issuer;
+@property (nonatomic, strong, readonly) CLQCardIssuer *issuer;
 @property (nonatomic, strong, readonly) NSArray <NSNumber *> *installmentsAllowed;
 
 @end
