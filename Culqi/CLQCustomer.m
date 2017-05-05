@@ -21,7 +21,7 @@
     NSDictionary *antifraudDetailsData = [data objectForKey:@"antifraud_details"];
     NSDictionary *metadata = [data objectForKey:@"metadata"];
     
-    return [[CLQClient alloc] initWithObject:object identifier:identifier creationDate:creationDate email:email antifraudDetailsData:antifraudDetailsData metadata:metadata];
+    return [[CLQCustomer alloc] initWithObject:object identifier:identifier creationDate:creationDate email:email antifraudDetailsData:antifraudDetailsData metadata:metadata];
 }
 
 - (instancetype)initWithObject:(NSString *)object identifier:(NSString *)identifier creationDate:(NSNumber *)creationDate email:(NSString *)email antifraudDetailsData:(NSDictionary *)antifraudDetailsData metadata:(NSDictionary *)metadata {
