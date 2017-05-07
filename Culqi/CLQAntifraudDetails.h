@@ -8,6 +8,7 @@
 
 #import "CLQBaseModelObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface CLQAntifraudDetails : CLQBaseModelObject
 
 @property (nonatomic, copy, readonly) NSString *object;
@@ -20,3 +21,4 @@
 @property (nonatomic, copy, readonly) NSString *phone;
 
 @end
+NS_ASSUME_NONNULL_END

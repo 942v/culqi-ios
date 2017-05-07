@@ -192,6 +192,39 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Subscriptions
 
++ (void)createSubscriptionWithCardIdentifier:(NSString *)cardIdentifier
+                              planIdentifier:(NSString *)planIdentifier
+                                    metadata:(NSDictionary *)metadata
+                                     success:(void (^)(NSDictionary *responseObject))success
+                                     failure:(void (^)(NSError *error))failure;
+
++ (void)getSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
+                              success:(void (^)(NSDictionary *responseObject))success
+                              failure:(void (^)(NSError *error))failure;
+
++ (void)getSubscriptionsWithAmount:(NSNumber *)amount
+                     minimumAmount:(NSNumber *)minimumAmount
+                     maximumAmount:(NSNumber *)maximumAmount
+                          unixDate:(NSNumber *)unixDate
+                      fromUnixDate:(NSNumber *)fromUnixDate
+                        toUnixDate:(NSNumber *)toUnixDate
+                          interval:(NSString *)interval
+                            status:(NSString *)status
+                             limit:(NSNumber *)limit
+      beforeSubscriptionIdentifier:(NSString *)beforeSubscriptionIdentifier
+       afterSubscriptionIdentifier:(NSString *)afterSubscriptionIdentifier
+                           success:(void (^)(NSDictionary *responseObject))success
+                           failure:(void (^)(NSError *error))failure;
+
++ (void)updateSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
+                                metadata:(NSDictionary *)metadata
+                                 success:(void (^)(NSDictionary *responseObject))success
+                                 failure:(void (^)(NSError *error))failure;
+
++ (void)deleteSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
+                                 success:(void (^)())success
+                                 failure:(void (^)(NSError *error))failure;
+
 #pragma mark - Cards
 
 + (void)createCardWithIdentifier:(NSString *)customerIdentifier
@@ -205,19 +238,19 @@ NS_ASSUME_NONNULL_BEGIN
                       success:(void (^)(NSDictionary *responseObject))success
                       failure:(void (^)(NSError *error))failure;
 
-+ (void)getCardsWithDate:(NSNumber *)date
-            fromUnixDate:(NSNumber *)fromUnixDate
-              toUnixDate:(NSNumber *)toUnixDate
-               cardBrand:(NSString *)cardBrand
-                cardType:(NSString *)cardType
-              deviceType:(NSString *)deviceType
-                     bin:(NSString *)bin
-             countryCode:(NSString *)countryCode
-                   limit:(NSNumber *)limit
-beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
- afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
-                 success:(void (^)(NSDictionary *responseObject))success
-                 failure:(void (^)(NSError *error))failure;
++ (void)getCardsWithUnixDate:(NSNumber *)unixDate
+                fromUnixDate:(NSNumber *)fromUnixDate
+                  toUnixDate:(NSNumber *)toUnixDate
+                   cardBrand:(NSString *)cardBrand
+                    cardType:(NSString *)cardType
+                  deviceType:(NSString *)deviceType
+                         bin:(NSString *)bin
+                 countryCode:(NSString *)countryCode
+                       limit:(NSNumber *)limit
+    beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
+     afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
+                     success:(void (^)(NSDictionary *responseObject))success
+                     failure:(void (^)(NSError *error))failure;
 
 + (void)updateCardWithIdentifier:(NSString *)cardIdentifier
                         metadata:(NSDictionary *)metadata

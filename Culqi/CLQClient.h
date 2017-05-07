@@ -8,6 +8,7 @@
 
 #import "CLQBaseModelObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface CLQClient : CLQBaseModelObject
 
 @property (nonatomic, copy, readonly) NSString *ip;
@@ -18,3 +19,4 @@
 @property (nonatomic, copy, readonly) NSString *deviceType;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
 @interface CLQBaseModelObject : NSObject <NSSecureCoding>
 
 + (NSString *)classNameString;
@@ -20,3 +21,4 @@
 - (NSData *)getArchivedVersion;
 
 @end
+NS_ASSUME_NONNULL_END

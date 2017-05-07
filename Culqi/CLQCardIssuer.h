@@ -8,6 +8,7 @@
 
 #import "CLQBaseModelObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface CLQCardIssuer : CLQBaseModelObject
 
 @property (nonatomic, copy, readonly) NSString *name;
@@ -17,3 +18,4 @@
 @property (nonatomic, copy, readonly) NSString *phoneNumber;
 
 @end
+NS_ASSUME_NONNULL_END

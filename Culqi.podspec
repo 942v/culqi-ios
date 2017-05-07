@@ -37,8 +37,8 @@ TODO: Add long description of the pod here.
   ]
 
   s.subspec "Models" do |ss|
-    ss.source_files = 'Culqi/CLQ{BaseModelObject,Token,IssuerIdentificationNumber,CardIssuer,Client,AntifraudDetails,Card,Charge,Outcome,FeeDetails,FeeFixed,FeeVariable,Operation,TokenCard,Plan,Customer}.{h,m}'
-    ss.public_header_files = 'Culqi/CLQ{BaseModelObject,Token,IssuerIdentificationNumber,CardIssuer,Client,AntifraudDetails,Card,Charge,Outcome,FeeDetails,FeeFixed,FeeVariable,Operation,TokenCard,Plan,Customer}.h'
+    ss.source_files = 'Culqi/CLQ{BaseModelObject,Token,IssuerIdentificationNumber,CardIssuer,Client,AntifraudDetails,Card,Charge,Outcome,FeeDetails,FeeFixed,FeeVariable,Operation,Plan,Customer,Subscription}.{h,m}'
+    ss.public_header_files = 'Culqi/CLQ{BaseModelObject,Token,IssuerIdentificationNumber,CardIssuer,Client,AntifraudDetails,Card,Charge,Outcome,FeeDetails,FeeFixed,FeeVariable,Operation,Plan,Customer,Subscription}.h'
   end
 
   s.subspec "Networking" do |ss|

@@ -10,6 +10,7 @@
 
 @class CLQToken, CLQCard, CLQClient, CLQOutcome, CLQAntifraudDetails, CLQFeeDetails, CLQOperation;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface CLQCharge : CLQBaseModelObject
 
 @property (nonatomic, copy, readonly) NSString *object;
@@ -43,3 +44,4 @@
 @property (nonatomic, strong, readonly) CLQOperation *operation;
 
 @end
+NS_ASSUME_NONNULL_END

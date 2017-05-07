@@ -8,6 +8,7 @@
 
 #import "CLQBaseModelObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @class CLQFeeFixed, CLQFeeVariable;
 
 @interface CLQFeeDetails : CLQBaseModelObject
@@ -16,3 +17,4 @@
 @property (nonatomic, strong, readonly) CLQFeeVariable *variableFee;
 
 @end
+NS_ASSUME_NONNULL_END

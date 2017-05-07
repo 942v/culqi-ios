@@ -460,6 +460,91 @@
 
 #pragma mark - Subscriptions
 
++ (void)createSubscriptionWithCardIdentifier:(NSString *)cardIdentifier
+                              planIdentifier:(NSString *)planIdentifier
+                                    metadata:(NSDictionary *)metadata
+                                     success:(void (^)(NSDictionary * _Nonnull))success
+                                     failure:(void (^)(NSError * _Nonnull))failure {
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setObject:cardIdentifier forKey:@"card_id"];
+    [parameters setObject:planIdentifier forKey:@"plan_id"];
+    if (metadata) [parameters setObject:metadata forKey:@"metadata"];
+    
+    [[CLQHTTPSessionManager manager] POST:@"subscriptions" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)getSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
+                              success:(void (^)(NSDictionary * _Nonnull))success
+                              failure:(void (^)(NSError * _Nonnull))failure {
+    
+    [[CLQHTTPSessionManager manager] GET:[@"subscriptions" stringByAppendingFormat:@"/%@", subscriptionIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)getSubscriptionsWithAmount:(NSNumber *)amount
+                     minimumAmount:(NSNumber *)minimumAmount
+                     maximumAmount:(NSNumber *)maximumAmount
+                          unixDate:(NSNumber *)unixDate
+                      fromUnixDate:(NSNumber *)fromUnixDate
+                        toUnixDate:(NSNumber *)toUnixDate
+                          interval:(NSString *)interval
+                            status:(NSString *)status
+                             limit:(NSNumber *)limit
+          beforeSubscriptionIdentifier:(NSString *)beforeSubscriptionIdentifier
+           afterSubscriptionIdentifier:(NSString *)afterSubscriptionIdentifier
+                           success:(void (^)(NSDictionary * _Nonnull))success
+                           failure:(void (^)(NSError * _Nonnull))failure {
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    
+    if (amount) [parameters setObject:amount forKey:@"amount"];
+    if (minimumAmount) [parameters setObject:minimumAmount forKey:@"min_amount"];
+    if (maximumAmount) [parameters setObject:maximumAmount forKey:@"max_amount"];
+    if (unixDate) [parameters setObject:unixDate forKey:@"date"];
+    if (fromUnixDate) [parameters setObject:fromUnixDate forKey:@"date_from"];
+    if (toUnixDate) [parameters setObject:toUnixDate forKey:@"date_to"];
+    if (interval) [parameters setObject:interval forKey:@"interval"];
+    if (status) [parameters setObject:status forKey:@"status"];
+    if (limit) [parameters setObject:limit forKey:@"limit"];
+    if (beforeSubscriptionIdentifier) [parameters setObject:beforeSubscriptionIdentifier forKey:@"before"];
+    if (afterSubscriptionIdentifier) [parameters setObject:afterSubscriptionIdentifier forKey:@"after"];
+}
+
++ (void)updateSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
+                                metadata:(NSDictionary *)metadata
+                                 success:(void (^)(NSDictionary * _Nonnull))success
+                                 failure:(void (^)(NSError * _Nonnull))failure {
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    
+    if (metadata) [parameters setObject:metadata forKey:@"metadata"];
+    
+    [[CLQHTTPSessionManager manager] PATCH:[@"subscriptions" stringByAppendingFormat:@"/%@", subscriptionIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)deleteSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
+                                 success:(void (^)())success
+                                 failure:(void (^)(NSError * _Nonnull))failure {
+    
+    [[CLQHTTPSessionManager manager] DELETE:[@"subscriptions" stringByAppendingFormat:@"/%@", subscriptionIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success ();// TODO: shouldn't this be a 204?
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
 #pragma mark - Cards
 
 + (void)createCardWithIdentifier:(NSString *)customerIdentifier
@@ -468,6 +553,7 @@
                         metadata:(NSDictionary *)metadata
                          success:(void (^)(NSDictionary * _Nonnull))success
                          failure:(void (^)(NSError * _Nonnull))failure {
+    
     NSDictionary *parameters = @{
                                  @"customer_id":customerIdentifier,
                                  @"token_id":tokenIdentifier,
@@ -493,23 +579,23 @@
     }];
 }
 
-+ (void)getCardsWithDate:(NSNumber *)date
-            fromUnixDate:(NSNumber *)fromUnixDate
-              toUnixDate:(NSNumber *)toUnixDate
-               cardBrand:(NSString *)cardBrand
-                cardType:(NSString *)cardType
-              deviceType:(NSString *)deviceType
-                     bin:(NSString *)bin
-             countryCode:(NSString *)countryCode
-                   limit:(NSNumber *)limit
-beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
- afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
-                 success:(void (^)(NSDictionary * _Nonnull))success
-                 failure:(void (^)(NSError * _Nonnull))failure {
++ (void)getCardsWithUnixDate:(NSNumber *)unixDate
+                fromUnixDate:(NSNumber *)fromUnixDate
+                  toUnixDate:(NSNumber *)toUnixDate
+                   cardBrand:(NSString *)cardBrand
+                    cardType:(NSString *)cardType
+                  deviceType:(NSString *)deviceType
+                         bin:(NSString *)bin
+                 countryCode:(NSString *)countryCode
+                       limit:(NSNumber *)limit
+    beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
+     afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
+                     success:(void (^)(NSDictionary * _Nonnull))success
+                     failure:(void (^)(NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
-    if (date) [parameters setObject:date forKey:@"date"];
+    if (unixDate) [parameters setObject:unixDate forKey:@"date"];
     if (fromUnixDate) [parameters setObject:fromUnixDate forKey:@"date_from"];
     if (toUnixDate) [parameters setObject:toUnixDate forKey:@"date_to"];
     if (cardBrand) [parameters setObject:cardBrand forKey:@"card_brand"];

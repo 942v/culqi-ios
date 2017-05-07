@@ -8,6 +8,7 @@
 
 #import "CLQBaseModelObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @class CLQCardIssuer;
 
 @interface CLQIssuerIdentificationNumber : CLQBaseModelObject
@@ -21,3 +22,4 @@
 @property (nonatomic, strong, readonly) NSArray <NSNumber *> *installmentsAllowed;
 
 @end
+NS_ASSUME_NONNULL_END

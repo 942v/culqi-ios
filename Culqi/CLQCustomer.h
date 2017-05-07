@@ -10,6 +10,7 @@
 
 @class CLQAntifraudDetails;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface CLQCustomer : CLQBaseModelObject
 
 @property (nonatomic, copy, readonly) NSString *object;
@@ -20,3 +21,4 @@
 @property (nonatomic, strong, readonly) NSDictionary *metadata;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -8,6 +8,7 @@
 
 #import "CLQBaseModelObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface CLQOperation : CLQBaseModelObject
 
 @property (nonatomic, copy, readonly) NSString *type;
@@ -15,3 +16,4 @@
 @property (nonatomic, strong, readonly) NSDate *creationDate;
 
 @end
+NS_ASSUME_NONNULL_END

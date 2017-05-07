@@ -8,6 +8,7 @@
 
 #import "CLQBaseModelObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface CLQFeeFixed : CLQBaseModelObject
 
 @property (nonatomic, strong, readonly) NSNumber *amount;
@@ -17,3 +18,4 @@
 @property (nonatomic, strong, readonly) NSNumber *total;
 
 @end
+NS_ASSUME_NONNULL_END
