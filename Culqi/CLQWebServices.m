@@ -106,207 +106,6 @@
     }];
 }
 
-#pragma mark - Plans
-
-+ (void)createPlanWithName:(NSString *)name
-                    amount:(NSNumber *)amount
-              currencyCode:(NSString *)currencyCode
-                  interval:(NSString *)interval
-             intervalCount:(NSNumber *)intervalCount
-                 trialDays:(NSNumber *)trialDays
-                     limit:(NSNumber *)limit
-                  metadata:(NSDictionary *)metadata
-                   success:(void (^)(NSDictionary * _Nonnull))success
-                   failure:(void (^)(NSError * _Nonnull))failure {
-    
-    NSDictionary *parameters = @{
-                                 @"name":name,
-                                 @"amount":amount,
-                                 @"currencyCode":currencyCode,
-                                 @"interval":interval,
-                                 @"intervalCount":intervalCount,
-                                 @"trialDays":trialDays,
-                                 @"limit":limit,
-                                 @"metadata":metadata,
-                                 };
-    
-    [[CLQHTTPSessionManager manager] POST:@"plans" parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
-    }];
-}
-
-+ (void)getPlanWithIdentifier:(NSString *)planIdentifier
-                      success:(void (^)(NSDictionary * _Nonnull))success
-                      failure:(void (^)(NSError * _Nonnull))failure {
-    
-    [[CLQHTTPSessionManager manager] GET:[@"plans" stringByAppendingFormat:@"/%@", planIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
-    }];
-}
-
-+ (void)getPlansWithAmount:(NSNumber *)amount
-                 minAmount:(NSNumber *)minAmount
-                 maxAmount:(NSNumber *)maxAmount
-              fromUnixDate:(NSNumber *)fromUnixDate
-                toUnixDate:(NSNumber *)toUnixDate
-                     limit:(NSNumber *)limit
-      beforePlanIdentifier:(NSString *)beforePlanIdentifier
-       afterPlanIdentifier:(NSString *)afterPlanIdentifier
-                   success:(void (^)(NSDictionary * _Nonnull))success
-                   failure:(void (^)(NSError * _Nonnull))failure {
-    
-    
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    
-    if (amount) [parameters setObject:amount forKey:@"amount"];
-    if (minAmount) [parameters setObject:minAmount forKey:@"min_amount"];
-    if (maxAmount) [parameters setObject:maxAmount forKey:@"max_amount"];
-    if (fromUnixDate) [parameters setObject:fromUnixDate forKey:@"date_from"];
-    if (toUnixDate) [parameters setObject:toUnixDate forKey:@"date_to"];
-    if (limit) [parameters setObject:limit forKey:@"limit"];
-    if (beforePlanIdentifier) [parameters setObject:beforePlanIdentifier forKey:@"before"];
-    if (afterPlanIdentifier) [parameters setObject:afterPlanIdentifier forKey:@"after"];
-    
-    [[CLQHTTPSessionManager manager] GET:@"plans" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
-    }];
-}
-
-+ (void)updatePlanWithIdentifier:(NSString *)planIdentifier
-                        metadata:(NSDictionary *)metadata
-                         success:(void (^)(NSDictionary * _Nonnull))success
-                         failure:(void (^)(NSError * _Nonnull))failure {
-    
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    
-    if (metadata) [parameters setObject:metadata forKey:@"metadata"];
-    
-    [[CLQHTTPSessionManager manager] PATCH:[@"plans" stringByAppendingFormat:@"/%@", planIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
-    }];
-}
-
-+ (void)deletePlanWithIdentifier:(NSString *)planIdentifier
-                         success:(void (^)())success
-                         failure:(void (^)(NSError * _Nonnull))failure {
-    
-    [[CLQHTTPSessionManager manager] DELETE:[@"plans" stringByAppendingFormat:@"/%@", planIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success ();// TODO: shouldn't this be a 204?
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
-    }];
-}
-
-#pragma mark - Customers
-
-+ (void)createCustomerWithFirstName:(NSString *)firstName
-                           lastName:(NSString *)lastName
-                              email:(NSString *)email
-                            address:(NSString *)address
-                        addressCity:(NSString *)addressCity
-                        countryCode:(NSString *)countryCode
-                        phoneNumber:(NSString *)phoneNumber
-                           metadata:(NSDictionary *)metadata
-                            success:(void (^)(NSDictionary * _Nonnull))success
-                            failure:(void (^)(NSError * _Nonnull))failure {
-    
-    NSDictionary *parameters = @{
-                                 @"first_name":firstName,
-                                 @"last_name":lastName,
-                                 @"email":email,
-                                 @"address":address,
-                                 @"address_city":addressCity,
-                                 @"country_code":countryCode,
-                                 @"phone_number":phoneNumber,
-                                 @"metadata":metadata
-                                 };
-    
-    [[CLQHTTPSessionManager manager] POST:@"customers" parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
-    }];
-}
-
-+ (void)getCustomerWithIdentifier:(NSString *)customerIdentifier
-                          success:(void (^)(NSDictionary * _Nonnull))success
-                          failure:(void (^)(NSError * _Nonnull))failure {
-    
-    [[CLQHTTPSessionManager manager] GET:[@"customers" stringByAppendingFormat:@"/%@", customerIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
-    }];
-}
-
-+ (void)getCustomersWithFirstName:(NSString *)firstName
-                         lastName:(NSString *)lastName
-                            email:(NSString *)email
-                          address:(NSString *)address
-                      addressCity:(NSString *)addressCity
-                      phoneNumber:(NSString *)phoneNumber
-                      countryCode:(NSString *)countryCode
-                            limit:(NSNumber *)limit
-         beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
-          afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
-                          success:(void (^)(NSDictionary * _Nonnull))success
-                          failure:(void (^)(NSError * _Nonnull))failure {
-    
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    
-    if (firstName) [parameters setObject:firstName forKey:@"first_name"];
-    if (lastName) [parameters setObject:lastName forKey:@"last_name"];
-    if (email) [parameters setObject:email forKey:@"email"];
-    if (address) [parameters setObject:address forKey:@"address"];
-    if (addressCity) [parameters setObject:addressCity forKey:@"address_city"];
-    if (phoneNumber) [parameters setObject:phoneNumber forKey:@"phone_number"];
-    if (countryCode) [parameters setObject:countryCode forKey:@"country_code"];
-    if (limit) [parameters setObject:limit forKey:@"limit"];
-    if (beforeCustomerIdentifier) [parameters setObject:beforeCustomerIdentifier forKey:@"before"];
-    if (afterCustomerIdentifier) [parameters setObject:afterCustomerIdentifier forKey:@"after"];
-    
-    [[CLQHTTPSessionManager manager] GET:@"customers" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
-    }];
-}
-
-+ (void)updateCustomerWithIdentifier:(NSString *)customerIdentifier
-                            metadata:(NSDictionary *)metadata
-                             success:(void (^)(NSDictionary * _Nonnull))success
-                             failure:(void (^)(NSError * _Nonnull))failure {
-    
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    
-    if (metadata) [parameters setObject:metadata forKey:@"metadata"];
-    
-    [[CLQHTTPSessionManager manager] PATCH:[@"customers" stringByAppendingFormat:@"/%@", customerIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
-    }];
-}
-
-+ (void)deleteCustomerWithIdentifier:(NSString *)customerIdentifier
-                             success:(void (^)())success
-                             failure:(void (^)(NSError * _Nonnull))failure {
-    
-    [[CLQHTTPSessionManager manager] DELETE:[@"customers" stringByAppendingFormat:@"/%@", customerIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success ();// TODO: shouldn't this be a 204?
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
-    }];
-}
-
 #pragma mark - Charges
 
 + (void)createChargeWithAmount:(NSNumber *)amount
@@ -458,87 +257,104 @@
     }];
 }
 
-#pragma mark - Subscriptions
+#pragma mark - Refunds
 
-+ (void)createSubscriptionWithCardIdentifier:(NSString *)cardIdentifier
-                              planIdentifier:(NSString *)planIdentifier
-                                    metadata:(NSDictionary *)metadata
-                                     success:(void (^)(NSDictionary * _Nonnull))success
-                                     failure:(void (^)(NSError * _Nonnull))failure {
+#pragma mark - Customers
+
++ (void)createCustomerWithFirstName:(NSString *)firstName
+                           lastName:(NSString *)lastName
+                              email:(NSString *)email
+                            address:(NSString *)address
+                        addressCity:(NSString *)addressCity
+                        countryCode:(NSString *)countryCode
+                        phoneNumber:(NSString *)phoneNumber
+                           metadata:(NSDictionary *)metadata
+                            success:(void (^)(NSDictionary * _Nonnull))success
+                            failure:(void (^)(NSError * _Nonnull))failure {
     
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    [parameters setObject:cardIdentifier forKey:@"card_id"];
-    [parameters setObject:planIdentifier forKey:@"plan_id"];
-    if (metadata) [parameters setObject:metadata forKey:@"metadata"];
+    NSDictionary *parameters = @{
+                                 @"first_name":firstName,
+                                 @"last_name":lastName,
+                                 @"email":email,
+                                 @"address":address,
+                                 @"address_city":addressCity,
+                                 @"country_code":countryCode,
+                                 @"phone_number":phoneNumber,
+                                 @"metadata":metadata
+                                 };
     
-    [[CLQHTTPSessionManager manager] POST:@"subscriptions" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [[CLQHTTPSessionManager manager] POST:@"customers" parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success (responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) failure(error);
     }];
 }
 
-+ (void)getSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
-                              success:(void (^)(NSDictionary * _Nonnull))success
-                              failure:(void (^)(NSError * _Nonnull))failure {
++ (void)getCustomerWithIdentifier:(NSString *)customerIdentifier
+                          success:(void (^)(NSDictionary * _Nonnull))success
+                          failure:(void (^)(NSError * _Nonnull))failure {
     
-    [[CLQHTTPSessionManager manager] GET:[@"subscriptions" stringByAppendingFormat:@"/%@", subscriptionIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [[CLQHTTPSessionManager manager] GET:[@"customers" stringByAppendingFormat:@"/%@", customerIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success (responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) failure(error);
     }];
 }
 
-+ (void)getSubscriptionsWithAmount:(NSNumber *)amount
-                     minimumAmount:(NSNumber *)minimumAmount
-                     maximumAmount:(NSNumber *)maximumAmount
-                          unixDate:(NSNumber *)unixDate
-                      fromUnixDate:(NSNumber *)fromUnixDate
-                        toUnixDate:(NSNumber *)toUnixDate
-                          interval:(NSString *)interval
-                            status:(NSString *)status
-                             limit:(NSNumber *)limit
-          beforeSubscriptionIdentifier:(NSString *)beforeSubscriptionIdentifier
-           afterSubscriptionIdentifier:(NSString *)afterSubscriptionIdentifier
-                           success:(void (^)(NSDictionary * _Nonnull))success
-                           failure:(void (^)(NSError * _Nonnull))failure {
++ (void)getCustomersWithFirstName:(NSString *)firstName
+                         lastName:(NSString *)lastName
+                            email:(NSString *)email
+                          address:(NSString *)address
+                      addressCity:(NSString *)addressCity
+                      phoneNumber:(NSString *)phoneNumber
+                      countryCode:(NSString *)countryCode
+                            limit:(NSNumber *)limit
+         beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
+          afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
+                          success:(void (^)(NSDictionary * _Nonnull))success
+                          failure:(void (^)(NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
-    if (amount) [parameters setObject:amount forKey:@"amount"];
-    if (minimumAmount) [parameters setObject:minimumAmount forKey:@"min_amount"];
-    if (maximumAmount) [parameters setObject:maximumAmount forKey:@"max_amount"];
-    if (unixDate) [parameters setObject:unixDate forKey:@"date"];
-    if (fromUnixDate) [parameters setObject:fromUnixDate forKey:@"date_from"];
-    if (toUnixDate) [parameters setObject:toUnixDate forKey:@"date_to"];
-    if (interval) [parameters setObject:interval forKey:@"interval"];
-    if (status) [parameters setObject:status forKey:@"status"];
+    if (firstName) [parameters setObject:firstName forKey:@"first_name"];
+    if (lastName) [parameters setObject:lastName forKey:@"last_name"];
+    if (email) [parameters setObject:email forKey:@"email"];
+    if (address) [parameters setObject:address forKey:@"address"];
+    if (addressCity) [parameters setObject:addressCity forKey:@"address_city"];
+    if (phoneNumber) [parameters setObject:phoneNumber forKey:@"phone_number"];
+    if (countryCode) [parameters setObject:countryCode forKey:@"country_code"];
     if (limit) [parameters setObject:limit forKey:@"limit"];
-    if (beforeSubscriptionIdentifier) [parameters setObject:beforeSubscriptionIdentifier forKey:@"before"];
-    if (afterSubscriptionIdentifier) [parameters setObject:afterSubscriptionIdentifier forKey:@"after"];
-}
-
-+ (void)updateSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
-                                metadata:(NSDictionary *)metadata
-                                 success:(void (^)(NSDictionary * _Nonnull))success
-                                 failure:(void (^)(NSError * _Nonnull))failure {
+    if (beforeCustomerIdentifier) [parameters setObject:beforeCustomerIdentifier forKey:@"before"];
+    if (afterCustomerIdentifier) [parameters setObject:afterCustomerIdentifier forKey:@"after"];
     
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    
-    if (metadata) [parameters setObject:metadata forKey:@"metadata"];
-    
-    [[CLQHTTPSessionManager manager] PATCH:[@"subscriptions" stringByAppendingFormat:@"/%@", subscriptionIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [[CLQHTTPSessionManager manager] GET:@"customers" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success (responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) failure(error);
     }];
 }
 
-+ (void)deleteSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
-                                 success:(void (^)())success
-                                 failure:(void (^)(NSError * _Nonnull))failure {
++ (void)updateCustomerWithIdentifier:(NSString *)customerIdentifier
+                            metadata:(NSDictionary *)metadata
+                             success:(void (^)(NSDictionary * _Nonnull))success
+                             failure:(void (^)(NSError * _Nonnull))failure {
     
-    [[CLQHTTPSessionManager manager] DELETE:[@"subscriptions" stringByAppendingFormat:@"/%@", subscriptionIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    
+    if (metadata) [parameters setObject:metadata forKey:@"metadata"];
+    
+    [[CLQHTTPSessionManager manager] PATCH:[@"customers" stringByAppendingFormat:@"/%@", customerIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)deleteCustomerWithIdentifier:(NSString *)customerIdentifier
+                             success:(void (^)())success
+                             failure:(void (^)(NSError * _Nonnull))failure {
+    
+    [[CLQHTTPSessionManager manager] DELETE:[@"customers" stringByAppendingFormat:@"/%@", customerIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success ();// TODO: shouldn't this be a 204?
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) failure(error);
@@ -635,6 +451,192 @@
                          failure:(void (^)(NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] DELETE:[@"cards" stringByAppendingFormat:@"/%@", cardIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success ();// TODO: shouldn't this be a 204?
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
+#pragma mark - Plans
+
++ (void)createPlanWithName:(NSString *)name
+                    amount:(NSNumber *)amount
+              currencyCode:(NSString *)currencyCode
+                  interval:(NSString *)interval
+             intervalCount:(NSNumber *)intervalCount
+                 trialDays:(NSNumber *)trialDays
+                     limit:(NSNumber *)limit
+                  metadata:(NSDictionary *)metadata
+                   success:(void (^)(NSDictionary * _Nonnull))success
+                   failure:(void (^)(NSError * _Nonnull))failure {
+    
+    NSDictionary *parameters = @{
+                                 @"name":name,
+                                 @"amount":amount,
+                                 @"currencyCode":currencyCode,
+                                 @"interval":interval,
+                                 @"intervalCount":intervalCount,
+                                 @"trialDays":trialDays,
+                                 @"limit":limit,
+                                 @"metadata":metadata,
+                                 };
+    
+    [[CLQHTTPSessionManager manager] POST:@"plans" parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)getPlanWithIdentifier:(NSString *)planIdentifier
+                      success:(void (^)(NSDictionary * _Nonnull))success
+                      failure:(void (^)(NSError * _Nonnull))failure {
+    
+    [[CLQHTTPSessionManager manager] GET:[@"plans" stringByAppendingFormat:@"/%@", planIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)getPlansWithAmount:(NSNumber *)amount
+                 minAmount:(NSNumber *)minAmount
+                 maxAmount:(NSNumber *)maxAmount
+              fromUnixDate:(NSNumber *)fromUnixDate
+                toUnixDate:(NSNumber *)toUnixDate
+                     limit:(NSNumber *)limit
+      beforePlanIdentifier:(NSString *)beforePlanIdentifier
+       afterPlanIdentifier:(NSString *)afterPlanIdentifier
+                   success:(void (^)(NSDictionary * _Nonnull))success
+                   failure:(void (^)(NSError * _Nonnull))failure {
+    
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    
+    if (amount) [parameters setObject:amount forKey:@"amount"];
+    if (minAmount) [parameters setObject:minAmount forKey:@"min_amount"];
+    if (maxAmount) [parameters setObject:maxAmount forKey:@"max_amount"];
+    if (fromUnixDate) [parameters setObject:fromUnixDate forKey:@"date_from"];
+    if (toUnixDate) [parameters setObject:toUnixDate forKey:@"date_to"];
+    if (limit) [parameters setObject:limit forKey:@"limit"];
+    if (beforePlanIdentifier) [parameters setObject:beforePlanIdentifier forKey:@"before"];
+    if (afterPlanIdentifier) [parameters setObject:afterPlanIdentifier forKey:@"after"];
+    
+    [[CLQHTTPSessionManager manager] GET:@"plans" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)updatePlanWithIdentifier:(NSString *)planIdentifier
+                        metadata:(NSDictionary *)metadata
+                         success:(void (^)(NSDictionary * _Nonnull))success
+                         failure:(void (^)(NSError * _Nonnull))failure {
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    
+    if (metadata) [parameters setObject:metadata forKey:@"metadata"];
+    
+    [[CLQHTTPSessionManager manager] PATCH:[@"plans" stringByAppendingFormat:@"/%@", planIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)deletePlanWithIdentifier:(NSString *)planIdentifier
+                         success:(void (^)())success
+                         failure:(void (^)(NSError * _Nonnull))failure {
+    
+    [[CLQHTTPSessionManager manager] DELETE:[@"plans" stringByAppendingFormat:@"/%@", planIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success ();// TODO: shouldn't this be a 204?
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
+#pragma mark - Subscriptions
+
++ (void)createSubscriptionWithCardIdentifier:(NSString *)cardIdentifier
+                              planIdentifier:(NSString *)planIdentifier
+                                    metadata:(NSDictionary *)metadata
+                                     success:(void (^)(NSDictionary * _Nonnull))success
+                                     failure:(void (^)(NSError * _Nonnull))failure {
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setObject:cardIdentifier forKey:@"card_id"];
+    [parameters setObject:planIdentifier forKey:@"plan_id"];
+    if (metadata) [parameters setObject:metadata forKey:@"metadata"];
+    
+    [[CLQHTTPSessionManager manager] POST:@"subscriptions" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)getSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
+                              success:(void (^)(NSDictionary * _Nonnull))success
+                              failure:(void (^)(NSError * _Nonnull))failure {
+    
+    [[CLQHTTPSessionManager manager] GET:[@"subscriptions" stringByAppendingFormat:@"/%@", subscriptionIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)getSubscriptionsWithAmount:(NSNumber *)amount
+                     minimumAmount:(NSNumber *)minimumAmount
+                     maximumAmount:(NSNumber *)maximumAmount
+                          unixDate:(NSNumber *)unixDate
+                      fromUnixDate:(NSNumber *)fromUnixDate
+                        toUnixDate:(NSNumber *)toUnixDate
+                          interval:(NSString *)interval
+                            status:(NSString *)status
+                             limit:(NSNumber *)limit
+          beforeSubscriptionIdentifier:(NSString *)beforeSubscriptionIdentifier
+           afterSubscriptionIdentifier:(NSString *)afterSubscriptionIdentifier
+                           success:(void (^)(NSDictionary * _Nonnull))success
+                           failure:(void (^)(NSError * _Nonnull))failure {
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    
+    if (amount) [parameters setObject:amount forKey:@"amount"];
+    if (minimumAmount) [parameters setObject:minimumAmount forKey:@"min_amount"];
+    if (maximumAmount) [parameters setObject:maximumAmount forKey:@"max_amount"];
+    if (unixDate) [parameters setObject:unixDate forKey:@"date"];
+    if (fromUnixDate) [parameters setObject:fromUnixDate forKey:@"date_from"];
+    if (toUnixDate) [parameters setObject:toUnixDate forKey:@"date_to"];
+    if (interval) [parameters setObject:interval forKey:@"interval"];
+    if (status) [parameters setObject:status forKey:@"status"];
+    if (limit) [parameters setObject:limit forKey:@"limit"];
+    if (beforeSubscriptionIdentifier) [parameters setObject:beforeSubscriptionIdentifier forKey:@"before"];
+    if (afterSubscriptionIdentifier) [parameters setObject:afterSubscriptionIdentifier forKey:@"after"];
+}
+
++ (void)updateSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
+                                metadata:(NSDictionary *)metadata
+                                 success:(void (^)(NSDictionary * _Nonnull))success
+                                 failure:(void (^)(NSError * _Nonnull))failure {
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    
+    if (metadata) [parameters setObject:metadata forKey:@"metadata"];
+    
+    [[CLQHTTPSessionManager manager] PATCH:[@"subscriptions" stringByAppendingFormat:@"/%@", subscriptionIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)deleteSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
+                                 success:(void (^)())success
+                                 failure:(void (^)(NSError * _Nonnull))failure {
+    
+    [[CLQHTTPSessionManager manager] DELETE:[@"subscriptions" stringByAppendingFormat:@"/%@", subscriptionIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success ();// TODO: shouldn't this be a 204?
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) failure(error);

@@ -50,82 +50,6 @@ NS_ASSUME_NONNULL_BEGIN
                           success:(void (^)(NSDictionary *responseObject))success
                           failure:(void (^)(NSError *error))failure;
 
-#pragma mark - Plans
-
-+ (void)createPlanWithName:(NSString *)name
-                    amount:(NSNumber *)amount
-              currencyCode:(NSString *)currencyCode
-                  interval:(NSString *)interval // TODO: Ask devs
-             intervalCount:(NSNumber *)intervalCount
-                 trialDays:(NSNumber *)trialDays
-                     limit:(NSNumber *)limit
-                  metadata:(NSDictionary *)metadata
-                   success:(void (^)(NSDictionary *responseObject))success
-                   failure:(void (^)(NSError *error))failure;
-
-+ (void)getPlanWithIdentifier:(NSString *)planIdentifier
-                      success:(void (^)(NSDictionary *responseObject))success
-                      failure:(void (^)(NSError *error))failure;
-
-+ (void)getPlansWithAmount:(NSNumber *)amount
-                 minAmount:(NSNumber *)minAmount
-                 maxAmount:(NSNumber *)maxAmount
-              fromUnixDate:(NSNumber *)fromUnixDate
-                toUnixDate:(NSNumber *)toUnixDate
-                     limit:(NSNumber *)limit
-      beforePlanIdentifier:(NSString *)beforePlanIdentifier
-       afterPlanIdentifier:(NSString *)afterPlanIdentifier
-                   success:(void (^)(NSDictionary *responseObject))success
-                   failure:(void (^)(NSError *error))failure;
-
-+ (void)updatePlanWithIdentifier:(NSString *)planIdentifier
-                        metadata:(NSDictionary *)metadata
-                         success:(void (^)(NSDictionary *responseObject))success
-                         failure:(void (^)(NSError *error))failure;
-
-+ (void)deletePlanWithIdentifier:(NSString *)planIdentifier
-                         success:(void (^)())success
-                         failure:(void (^)(NSError *error))failure;
-
-#pragma mark - Customers
-
-+ (void)createCustomerWithFirstName:(NSString *)firstName
-                           lastName:(NSString *)lastName
-                              email:(NSString *)email
-                            address:(NSString *)address
-                        addressCity:(NSString *)addressCity
-                        countryCode:(NSString *)countryCode
-                        phoneNumber:(NSString *)phoneNumber
-                           metadata:(NSDictionary *)metadata
-                            success:(void (^)(NSDictionary *responseObject))success
-                            failure:(void (^)(NSError *error))failure;
-
-+ (void)getCustomerWithIdentifier:(NSString *)customerIdentifier
-                          success:(void (^)(NSDictionary *responseObject))success
-                          failure:(void (^)(NSError *error))failure;
-
-+ (void)getCustomersWithFirstName:(NSString *)firstName
-                         lastName:(NSString *)lastName
-                            email:(NSString *)email
-                          address:(NSString *)address
-                      addressCity:(NSString *)addressCity
-                      phoneNumber:(NSString *)phoneNumber
-                      countryCode:(NSString *)countryCode
-                            limit:(NSNumber *)limit
-         beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
-          afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
-                          success:(void (^)(NSDictionary *responseObject))success
-                          failure:(void (^)(NSError *error))failure;
-
-+ (void)updateCustomerWithIdentifier:(NSString *)customerIdentifier
-                            metadata:(NSDictionary *)metadata
-                             success:(void (^)(NSDictionary *responseObject))success
-                             failure:(void (^)(NSError *error))failure;
-
-+ (void)deleteCustomerWithIdentifier:(NSString *)customerIdentifier
-                             success:(void (^)())success
-                             failure:(void (^)(NSError *error))failure;
-
 #pragma mark - Charges
 
 + (void)createChargeWithAmount:(NSNumber *)amount
@@ -190,40 +114,46 @@ NS_ASSUME_NONNULL_BEGIN
                            success:(void (^)())success
                            failure:(void (^)(NSError *error))failure;
 
-#pragma mark - Subscriptions
+#pragma mark - Refunds
 
-+ (void)createSubscriptionWithCardIdentifier:(NSString *)cardIdentifier
-                              planIdentifier:(NSString *)planIdentifier
-                                    metadata:(NSDictionary *)metadata
-                                     success:(void (^)(NSDictionary *responseObject))success
-                                     failure:(void (^)(NSError *error))failure;
+#pragma mark - Customers
 
-+ (void)getSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
-                              success:(void (^)(NSDictionary *responseObject))success
-                              failure:(void (^)(NSError *error))failure;
++ (void)createCustomerWithFirstName:(NSString *)firstName
+                           lastName:(NSString *)lastName
+                              email:(NSString *)email
+                            address:(NSString *)address
+                        addressCity:(NSString *)addressCity
+                        countryCode:(NSString *)countryCode
+                        phoneNumber:(NSString *)phoneNumber
+                           metadata:(NSDictionary *)metadata
+                            success:(void (^)(NSDictionary *responseObject))success
+                            failure:(void (^)(NSError *error))failure;
 
-+ (void)getSubscriptionsWithAmount:(NSNumber *)amount
-                     minimumAmount:(NSNumber *)minimumAmount
-                     maximumAmount:(NSNumber *)maximumAmount
-                          unixDate:(NSNumber *)unixDate
-                      fromUnixDate:(NSNumber *)fromUnixDate
-                        toUnixDate:(NSNumber *)toUnixDate
-                          interval:(NSString *)interval
-                            status:(NSString *)status
-                             limit:(NSNumber *)limit
-      beforeSubscriptionIdentifier:(NSString *)beforeSubscriptionIdentifier
-       afterSubscriptionIdentifier:(NSString *)afterSubscriptionIdentifier
-                           success:(void (^)(NSDictionary *responseObject))success
-                           failure:(void (^)(NSError *error))failure;
++ (void)getCustomerWithIdentifier:(NSString *)customerIdentifier
+                          success:(void (^)(NSDictionary *responseObject))success
+                          failure:(void (^)(NSError *error))failure;
 
-+ (void)updateSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
-                                metadata:(NSDictionary *)metadata
-                                 success:(void (^)(NSDictionary *responseObject))success
-                                 failure:(void (^)(NSError *error))failure;
++ (void)getCustomersWithFirstName:(NSString *)firstName
+                         lastName:(NSString *)lastName
+                            email:(NSString *)email
+                          address:(NSString *)address
+                      addressCity:(NSString *)addressCity
+                      phoneNumber:(NSString *)phoneNumber
+                      countryCode:(NSString *)countryCode
+                            limit:(NSNumber *)limit
+         beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
+          afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
+                          success:(void (^)(NSDictionary *responseObject))success
+                          failure:(void (^)(NSError *error))failure;
 
-+ (void)deleteSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
-                                 success:(void (^)())success
-                                 failure:(void (^)(NSError *error))failure;
++ (void)updateCustomerWithIdentifier:(NSString *)customerIdentifier
+                            metadata:(NSDictionary *)metadata
+                             success:(void (^)(NSDictionary *responseObject))success
+                             failure:(void (^)(NSError *error))failure;
+
++ (void)deleteCustomerWithIdentifier:(NSString *)customerIdentifier
+                             success:(void (^)())success
+                             failure:(void (^)(NSError *error))failure;
 
 #pragma mark - Cards
 
@@ -260,6 +190,78 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)deleteCardWithIdentifier:(NSString *)cardIdentifier
                          success:(void (^)())success
                          failure:(void (^)(NSError *error))failure;
+
+#pragma mark - Plans
+
++ (void)createPlanWithName:(NSString *)name
+                    amount:(NSNumber *)amount
+              currencyCode:(NSString *)currencyCode
+                  interval:(NSString *)interval // TODO: Ask devs
+             intervalCount:(NSNumber *)intervalCount
+                 trialDays:(NSNumber *)trialDays
+                     limit:(NSNumber *)limit
+                  metadata:(NSDictionary *)metadata
+                   success:(void (^)(NSDictionary *responseObject))success
+                   failure:(void (^)(NSError *error))failure;
+
++ (void)getPlanWithIdentifier:(NSString *)planIdentifier
+                      success:(void (^)(NSDictionary *responseObject))success
+                      failure:(void (^)(NSError *error))failure;
+
++ (void)getPlansWithAmount:(NSNumber *)amount
+                 minAmount:(NSNumber *)minAmount
+                 maxAmount:(NSNumber *)maxAmount
+              fromUnixDate:(NSNumber *)fromUnixDate
+                toUnixDate:(NSNumber *)toUnixDate
+                     limit:(NSNumber *)limit
+      beforePlanIdentifier:(NSString *)beforePlanIdentifier
+       afterPlanIdentifier:(NSString *)afterPlanIdentifier
+                   success:(void (^)(NSDictionary *responseObject))success
+                   failure:(void (^)(NSError *error))failure;
+
++ (void)updatePlanWithIdentifier:(NSString *)planIdentifier
+                        metadata:(NSDictionary *)metadata
+                         success:(void (^)(NSDictionary *responseObject))success
+                         failure:(void (^)(NSError *error))failure;
+
++ (void)deletePlanWithIdentifier:(NSString *)planIdentifier
+                         success:(void (^)())success
+                         failure:(void (^)(NSError *error))failure;
+
+#pragma mark - Subscriptions
+
++ (void)createSubscriptionWithCardIdentifier:(NSString *)cardIdentifier
+                              planIdentifier:(NSString *)planIdentifier
+                                    metadata:(NSDictionary *)metadata
+                                     success:(void (^)(NSDictionary *responseObject))success
+                                     failure:(void (^)(NSError *error))failure;
+
++ (void)getSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
+                              success:(void (^)(NSDictionary *responseObject))success
+                              failure:(void (^)(NSError *error))failure;
+
++ (void)getSubscriptionsWithAmount:(NSNumber *)amount
+                     minimumAmount:(NSNumber *)minimumAmount
+                     maximumAmount:(NSNumber *)maximumAmount
+                          unixDate:(NSNumber *)unixDate
+                      fromUnixDate:(NSNumber *)fromUnixDate
+                        toUnixDate:(NSNumber *)toUnixDate
+                          interval:(NSString *)interval
+                            status:(NSString *)status
+                             limit:(NSNumber *)limit
+      beforeSubscriptionIdentifier:(NSString *)beforeSubscriptionIdentifier
+       afterSubscriptionIdentifier:(NSString *)afterSubscriptionIdentifier
+                           success:(void (^)(NSDictionary *responseObject))success
+                           failure:(void (^)(NSError *error))failure;
+
++ (void)updateSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
+                                metadata:(NSDictionary *)metadata
+                                 success:(void (^)(NSDictionary *responseObject))success
+                                 failure:(void (^)(NSError *error))failure;
+
++ (void)deleteSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
+                                 success:(void (^)())success
+                                 failure:(void (^)(NSError *error))failure;
 
 @end
 NS_ASSUME_NONNULL_END
