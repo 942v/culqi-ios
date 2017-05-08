@@ -116,6 +116,32 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Refunds
 
++ (void)createRefundWithChargeIdentifier:(NSString *)chargeIdentifier
+                                  amount:(NSNumber *)amount
+                                  reason:(NSString *)reason
+                                metadata:(NSDictionary *)metadata
+                                 success:(void (^)(NSDictionary *responseObject))success
+                                 failure:(void (^)(NSError *error))failure;
+
++ (void)getRefundWithIdentifier:(NSString *)refundIdentifier
+                        success:(void (^)(NSDictionary *responseObject))success
+                        failure:(void (^)(NSError *error))failure;
+
++ (void)getRefundsWithUnixDate:(NSNumber *)unixDate
+                  fromUnixDate:(NSNumber *)fromUnixDate
+                    toUnixDate:(NSNumber *)toUnixDate
+                        reason:(NSString *)reason
+                         limit:(NSNumber *)limit
+        beforeRefundIdentifier:(NSString *)beforeRefundIdentifier
+         afterRefundIdentifier:(NSString *)afterRefundIdentifier
+                       success:(void (^)(NSDictionary *responseObject))success
+                       failure:(void (^)(NSError *error))failure;
+
++ (void)updateRefundWithIdentifier:(NSString *)refundIdentifier
+                          metadata:(NSDictionary *)metadata
+                           success:(void (^)(NSDictionary *responseObject))success
+                           failure:(void (^)(NSError *error))failure;
+
 #pragma mark - Customers
 
 + (void)createCustomerWithFirstName:(NSString *)firstName

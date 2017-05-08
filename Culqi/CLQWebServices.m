@@ -259,6 +259,81 @@
 
 #pragma mark - Refunds
 
++ (void)createRefundWithChargeIdentifier:(NSString *)chargeIdentifier
+                                  amount:(NSNumber *)amount
+                                  reason:(NSString *)reason
+                                metadata:(NSDictionary *)metadata
+                                 success:(void (^)(NSDictionary * _Nonnull))success
+                                 failure:(void (^)(NSError * _Nonnull))failure {
+    
+    NSDictionary *parameters = @{
+                                 @"amount":amount,
+                                 @"charge_id":chargeIdentifier,
+                                 @"reason":reason,
+                                 @"metadata":metadata
+                                 };
+    
+    [[CLQHTTPSessionManager manager] POST:@"refunds" parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)getRefundWithIdentifier:(NSString *)refundIdentifier
+                        success:(void (^)(NSDictionary * _Nonnull))success
+                        failure:(void (^)(NSError * _Nonnull))failure {
+    
+    [[CLQHTTPSessionManager manager] GET:[@"refunds" stringByAppendingFormat:@"/%@", refundIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)getRefundsWithUnixDate:(NSNumber *)unixDate
+                  fromUnixDate:(NSNumber *)fromUnixDate
+                    toUnixDate:(NSNumber *)toUnixDate
+                        reason:(NSString *)reason
+                         limit:(NSNumber *)limit
+        beforeRefundIdentifier:(NSString *)beforeRefundIdentifier
+         afterRefundIdentifier:(NSString *)afterRefundIdentifier
+                       success:(void (^)(NSDictionary * _Nonnull))success
+                       failure:(void (^)(NSError * _Nonnull))failure {
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    
+    if (unixDate) [parameters setObject:unixDate forKey:@"date"];
+    if (fromUnixDate) [parameters setObject:fromUnixDate forKey:@"date_from"];
+    if (toUnixDate) [parameters setObject:toUnixDate forKey:@"date_to"];
+    if (reason) [parameters setObject:reason forKey:@"reason"];
+    if (limit) [parameters setObject:limit forKey:@"limit"];
+    if (beforeRefundIdentifier) [parameters setObject:beforeRefundIdentifier forKey:@"before"];
+    if (afterRefundIdentifier) [parameters setObject:afterRefundIdentifier forKey:@"after"];
+    
+    [[CLQHTTPSessionManager manager] GET:@"refunds" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
++ (void)updateRefundWithIdentifier:(NSString *)refundIdentifier
+                          metadata:(NSDictionary *)metadata
+                           success:(void (^)(NSDictionary * _Nonnull))success
+                           failure:(void (^)(NSError * _Nonnull))failure {
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    
+    if (metadata) [parameters setObject:metadata forKey:@"metadata"];
+    
+    [[CLQHTTPSessionManager manager] PATCH:[@"refunds" stringByAppendingFormat:@"/%@", refundIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success (responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
+}
+
 #pragma mark - Customers
 
 + (void)createCustomerWithFirstName:(NSString *)firstName
