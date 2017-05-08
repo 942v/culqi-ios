@@ -16,7 +16,7 @@
     
     // We start the SDK with our merchant code
 #warning Don't forget to put your merchant code. Get it here: https://integ-panel.culqi.com/#/registro
-    [[Culqi sharedInstance] setMerchantCode:@"pk_test_faXvVfDaxIM1152Z"];
+    [[Culqi sharedInstance] setMerchantCode:@"<CHANGE THIS FOR YOUR MERCHANT CODE>"];
     
     return YES;
 }
