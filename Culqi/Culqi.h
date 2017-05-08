@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class CLQResponseHeaders, CLQToken, CLQCard;
+@class CLQResponseHeaders, CLQError, CLQToken, CLQCard;
 
 @interface Culqi : NSObject
 
@@ -29,6 +29,6 @@
                             email:(NSString *_Nonnull)email
                          metadata:(NSDictionary * _Nullable)metadata
                           success:(void (^_Nullable)(CLQResponseHeaders *_Nonnull responseHeaders, CLQToken * _Nonnull token))success
-                          failure:(void (^_Nullable)(CLQResponseHeaders *_Nonnull responseHeaders, NSError * _Nonnull error))failure;
+                          failure:(void (^_Nullable)(CLQResponseHeaders *_Nonnull responseHeaders, CLQError * _Nonnull businessError, NSError * _Nonnull error))failure;
 
 @end

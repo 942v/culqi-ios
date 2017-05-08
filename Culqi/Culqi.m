@@ -89,15 +89,15 @@ static bool isFirstAccess = YES;
                             email:(NSString *)email
                          metadata:(NSDictionary * _Nullable)metadata
                           success:(void (^ _Nullable)(CLQResponseHeaders * _Nonnull, CLQToken * _Nonnull))success
-                          failure:(void (^ _Nullable)(CLQResponseHeaders * _Nonnull, NSError * _Nonnull))failure {
+                          failure:(void (^ _Nullable)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [CLQWebServices createTokenWithCardNumber:cardNumber cvv:cvv expirationMonth:expirationMonth expirationYear:expirationYear email:email metadata:metadata success:^(CLQResponseHeaders * _Nonnull responseHeaders, CLQToken * _Nonnull token) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) success(responseHeaders, token);
         });
-    } failure:^(CLQResponseHeaders * _Nonnull responseHeaders, NSError * _Nonnull error) {
+    } failure:^(CLQResponseHeaders * _Nonnull responseHeaders, CLQError * _Nonnull businessError, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (failure) failure(responseHeaders, error);
+            if (failure) failure(responseHeaders, businessError, error);
         });
     }];
 }

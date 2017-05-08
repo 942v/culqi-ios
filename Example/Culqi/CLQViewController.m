@@ -63,8 +63,8 @@
     
     [[Culqi sharedInstance] createTokenWithCardNumber:self.txtFieldCardNumber.text cvv:self.txtFieldCVC.text expirationMonth:self.txtFieldExpMonth.text expirationYear:self.txtFieldExpYear.text email:self.txtFieldEmail.text metadata:nil success:^(CLQResponseHeaders * _Nonnull responseHeaders, CLQToken * _Nonnull token) {
         NSLog(@"Did create token with identifier: %@", token.identifier);
-    } failure:^(CLQResponseHeaders * _Nonnull responseHeaders, NSError * _Nonnull error) {
-        NSLog(@"Error Creating token: %@", error.localizedDescription);
+    } failure:^(CLQResponseHeaders * _Nonnull responseHeaders, CLQError * _Nonnull businessError, NSError * _Nonnull error) {
+        NSLog(@"Error Creating token\nLocalized error: %@\nBusiness Error: %@", error.localizedDescription, businessError.merchantMessage);
     }];
 }
 

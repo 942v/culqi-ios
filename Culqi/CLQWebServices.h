@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@class CLQResponseHeaders, CLQToken, CLQAntifraudDetails;
+@class CLQResponseHeaders, CLQError;
+@class CLQToken, CLQCharge, CLQRefund, CLQCustomer, CLQCard, CLQPlan, CLQSubscription;
+@class CLQAntifraudDetails;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface CLQWebServices : NSObject
@@ -26,11 +28,11 @@ NS_ASSUME_NONNULL_BEGIN
                             email:(NSString *)email
                          metadata:(NSDictionary *)metadata
                           success:(void (^)(CLQResponseHeaders *responseHeaders, CLQToken *token))success
-                          failure:(void (^)(CLQResponseHeaders *responseHeaders, NSError *error))failure;
+                          failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getTokenWithIdentifier:(NSString *)tokenIdentifier
-                       success:(void (^)(NSDictionary *responseObject))success
-                       failure:(void (^)(NSError *error))failure;
+                       success:(void (^)(CLQResponseHeaders *responseHeaders, CLQToken *token))success
+                       failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getTokensWithFromUnixDate:(NSNumber *)fromUnixDate
                        toUnixDate:(NSNumber *)toUnixDate
@@ -42,13 +44,13 @@ NS_ASSUME_NONNULL_BEGIN
                             limit:(NSNumber *)limit
             beforeTokenIdentifier:(NSString *)beforeTokenIdentifier
              afterTokenIdentifier:(NSString *)afterTokenIdentifier
-                          success:(void (^)(NSDictionary *responseObject))success
-                          failure:(void (^)(NSError *error))failure;
+                          success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                          failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)updateTokenWithIdentifier:(NSString *)tokenIdentifier
                          metadata:(NSDictionary *)metadata
-                          success:(void (^)(NSDictionary *responseObject))success
-                          failure:(void (^)(NSError *error))failure;
+                          success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                          failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 #pragma mark - Charges
 
@@ -57,12 +59,12 @@ NS_ASSUME_NONNULL_BEGIN
                          email:(NSString *)email
               antifraudDetails:(CLQAntifraudDetails *)antifraudDetails
               sourceIdentifier:(NSString *)sourceIdentifier
-                       success:(void (^)(NSDictionary *responseObject))success
-                       failure:(void (^)(NSError *error))failure;
+                       success:(void (^)(CLQResponseHeaders *responseHeaders, CLQCharge *charge))success
+                       failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getChargeWithIdentifier:(NSString *)chargeIdentifier
-                        success:(void (^)(NSDictionary *responseObject))success
-                        failure:(void (^)(NSError *error))failure;
+                        success:(void (^)(CLQResponseHeaders *responseHeaders, CLQCharge *charge))success
+                        failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getChargesWithAmount:(NSNumber *)amount
                minimumAmount:(NSNumber *)minimumAmount
@@ -102,17 +104,17 @@ NS_ASSUME_NONNULL_BEGIN
                        limit:(NSNumber *)limit
       beforeChargeIdentifier:(NSString *)beforeChargeIdentifier
        afterChargeIdentifier:(NSString *)afterChargeIdentifier
-                     success:(void (^)(NSDictionary *responseObject))success
-                     failure:(void (^)(NSError *error))failure;
+                     success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                     failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)updateChargeWithIdentifier:(NSString *)chargeIdentifier
                           metadata:(NSDictionary *)metadata
-                           success:(void (^)(NSDictionary *responseObject))success
-                           failure:(void (^)(NSError *error))failure;
+                           success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                           failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)deleteChargeWithIdentifier:(NSString *)chargeIdentifier
                            success:(void (^)())success
-                           failure:(void (^)(NSError *error))failure;
+                           failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 #pragma mark - Refunds
 
@@ -120,12 +122,12 @@ NS_ASSUME_NONNULL_BEGIN
                                   amount:(NSNumber *)amount
                                   reason:(NSString *)reason
                                 metadata:(NSDictionary *)metadata
-                                 success:(void (^)(NSDictionary *responseObject))success
-                                 failure:(void (^)(NSError *error))failure;
+                                 success:(void (^)(CLQResponseHeaders *responseHeaders, CLQRefund *refund))success
+                                 failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getRefundWithIdentifier:(NSString *)refundIdentifier
-                        success:(void (^)(NSDictionary *responseObject))success
-                        failure:(void (^)(NSError *error))failure;
+                        success:(void (^)(CLQResponseHeaders *responseHeaders, CLQRefund *refund))success
+                        failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getRefundsWithUnixDate:(NSNumber *)unixDate
                   fromUnixDate:(NSNumber *)fromUnixDate
@@ -134,13 +136,13 @@ NS_ASSUME_NONNULL_BEGIN
                          limit:(NSNumber *)limit
         beforeRefundIdentifier:(NSString *)beforeRefundIdentifier
          afterRefundIdentifier:(NSString *)afterRefundIdentifier
-                       success:(void (^)(NSDictionary *responseObject))success
-                       failure:(void (^)(NSError *error))failure;
+                       success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                       failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)updateRefundWithIdentifier:(NSString *)refundIdentifier
                           metadata:(NSDictionary *)metadata
-                           success:(void (^)(NSDictionary *responseObject))success
-                           failure:(void (^)(NSError *error))failure;
+                           success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                           failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 #pragma mark - Customers
 
@@ -152,12 +154,12 @@ NS_ASSUME_NONNULL_BEGIN
                         countryCode:(NSString *)countryCode
                         phoneNumber:(NSString *)phoneNumber
                            metadata:(NSDictionary *)metadata
-                            success:(void (^)(NSDictionary *responseObject))success
-                            failure:(void (^)(NSError *error))failure;
+                            success:(void (^)(CLQResponseHeaders *responseHeaders, CLQCustomer *customer))success
+                            failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getCustomerWithIdentifier:(NSString *)customerIdentifier
-                          success:(void (^)(NSDictionary *responseObject))success
-                          failure:(void (^)(NSError *error))failure;
+                          success:(void (^)(CLQResponseHeaders *responseHeaders, CLQCustomer *customer))success
+                          failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getCustomersWithFirstName:(NSString *)firstName
                          lastName:(NSString *)lastName
@@ -169,17 +171,17 @@ NS_ASSUME_NONNULL_BEGIN
                             limit:(NSNumber *)limit
          beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
           afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
-                          success:(void (^)(NSDictionary *responseObject))success
-                          failure:(void (^)(NSError *error))failure;
+                          success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                          failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)updateCustomerWithIdentifier:(NSString *)customerIdentifier
                             metadata:(NSDictionary *)metadata
-                             success:(void (^)(NSDictionary *responseObject))success
-                             failure:(void (^)(NSError *error))failure;
+                             success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                             failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)deleteCustomerWithIdentifier:(NSString *)customerIdentifier
                              success:(void (^)())success
-                             failure:(void (^)(NSError *error))failure;
+                             failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 #pragma mark - Cards
 
@@ -187,12 +189,12 @@ NS_ASSUME_NONNULL_BEGIN
                  tokenIdentifier:(NSString *)tokenIdentifier
                   shouldValidate:(BOOL)shouldValidate
                         metadata:(NSDictionary *)metadata
-                         success:(void (^)(NSDictionary *responseObject))success
-                         failure:(void (^)(NSError *error))failure;
+                         success:(void (^)(CLQResponseHeaders *responseHeaders, CLQCard *card))success
+                         failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getCardWithIdentifier:(NSString *)cardIdentifier
-                      success:(void (^)(NSDictionary *responseObject))success
-                      failure:(void (^)(NSError *error))failure;
+                      success:(void (^)(CLQResponseHeaders *responseHeaders, CLQCard *card))success
+                      failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getCardsWithUnixDate:(NSNumber *)unixDate
                 fromUnixDate:(NSNumber *)fromUnixDate
@@ -205,17 +207,17 @@ NS_ASSUME_NONNULL_BEGIN
                        limit:(NSNumber *)limit
     beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
      afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
-                     success:(void (^)(NSDictionary *responseObject))success
-                     failure:(void (^)(NSError *error))failure;
+                     success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                     failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)updateCardWithIdentifier:(NSString *)cardIdentifier
                         metadata:(NSDictionary *)metadata
-                         success:(void (^)(NSDictionary *responseObject))success
-                         failure:(void (^)(NSError *error))failure;
+                         success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                         failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)deleteCardWithIdentifier:(NSString *)cardIdentifier
                          success:(void (^)())success
-                         failure:(void (^)(NSError *error))failure;
+                         failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 #pragma mark - Plans
 
@@ -227,12 +229,12 @@ NS_ASSUME_NONNULL_BEGIN
                  trialDays:(NSNumber *)trialDays
                      limit:(NSNumber *)limit
                   metadata:(NSDictionary *)metadata
-                   success:(void (^)(NSDictionary *responseObject))success
-                   failure:(void (^)(NSError *error))failure;
+                   success:(void (^)(CLQResponseHeaders *responseHeaders, CLQPlan *plan))success
+                   failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getPlanWithIdentifier:(NSString *)planIdentifier
-                      success:(void (^)(NSDictionary *responseObject))success
-                      failure:(void (^)(NSError *error))failure;
+                      success:(void (^)(CLQResponseHeaders *responseHeaders, CLQPlan *plan))success
+                      failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getPlansWithAmount:(NSNumber *)amount
                  minAmount:(NSNumber *)minAmount
@@ -242,29 +244,29 @@ NS_ASSUME_NONNULL_BEGIN
                      limit:(NSNumber *)limit
       beforePlanIdentifier:(NSString *)beforePlanIdentifier
        afterPlanIdentifier:(NSString *)afterPlanIdentifier
-                   success:(void (^)(NSDictionary *responseObject))success
-                   failure:(void (^)(NSError *error))failure;
+                   success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                   failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)updatePlanWithIdentifier:(NSString *)planIdentifier
                         metadata:(NSDictionary *)metadata
-                         success:(void (^)(NSDictionary *responseObject))success
-                         failure:(void (^)(NSError *error))failure;
+                         success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                         failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)deletePlanWithIdentifier:(NSString *)planIdentifier
                          success:(void (^)())success
-                         failure:(void (^)(NSError *error))failure;
+                         failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 #pragma mark - Subscriptions
 
 + (void)createSubscriptionWithCardIdentifier:(NSString *)cardIdentifier
                               planIdentifier:(NSString *)planIdentifier
                                     metadata:(NSDictionary *)metadata
-                                     success:(void (^)(NSDictionary *responseObject))success
-                                     failure:(void (^)(NSError *error))failure;
+                                     success:(void (^)(CLQResponseHeaders *responseHeaders, CLQSubscription *subscription))success
+                                     failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
-                              success:(void (^)(NSDictionary *responseObject))success
-                              failure:(void (^)(NSError *error))failure;
+                              success:(void (^)(CLQResponseHeaders *responseHeaders, CLQSubscription *subscription))success
+                              failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)getSubscriptionsWithAmount:(NSNumber *)amount
                      minimumAmount:(NSNumber *)minimumAmount
@@ -277,17 +279,17 @@ NS_ASSUME_NONNULL_BEGIN
                              limit:(NSNumber *)limit
       beforeSubscriptionIdentifier:(NSString *)beforeSubscriptionIdentifier
        afterSubscriptionIdentifier:(NSString *)afterSubscriptionIdentifier
-                           success:(void (^)(NSDictionary *responseObject))success
-                           failure:(void (^)(NSError *error))failure;
+                           success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                           failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)updateSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
                                 metadata:(NSDictionary *)metadata
-                                 success:(void (^)(NSDictionary *responseObject))success
-                                 failure:(void (^)(NSError *error))failure;
+                                 success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                                 failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)deleteSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
                                  success:(void (^)())success
-                                 failure:(void (^)(NSError *error))failure;
+                                 failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 @end
 NS_ASSUME_NONNULL_END

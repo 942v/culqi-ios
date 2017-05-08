@@ -11,7 +11,14 @@
 #import "CLQHTTPSessionManager.h"
 
 #import "CLQResponseHeaders.h"
+#import "CLQError.h"
 #import "CLQToken.h"
+#import "CLQCharge.h"
+#import "CLQRefund.h"
+#import "CLQCustomer.h"
+#import "CLQCard.h"
+#import "CLQPlan.h"
+#import "CLQSubscription.h"
 
 @implementation CLQWebServices
 
@@ -31,7 +38,7 @@
                             email:(NSString *)email
                          metadata:(nonnull NSDictionary *)metadata
                           success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQToken * _Nonnull))success
-                          failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSError * _Nonnull))failure {
+                          failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
@@ -43,21 +50,26 @@
     if (metadata) [parameters setObject:metadata forKey:@"metadata"];
     
     [[CLQHTTPSessionManager manager] POST:@"tokens" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
-        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]], [CLQToken newWithData:responseObject]);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQToken newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]], error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)getTokenWithIdentifier:(NSString *)tokenIdentifier
-                       success:(void (^)(NSDictionary * _Nonnull))success
-                       failure:(void (^)(NSError * _Nonnull))failure {
+                       success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQToken * _Nonnull))success
+                       failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] GET:[@"tokens" stringByAppendingFormat:@"/%@", tokenIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQToken newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -71,8 +83,8 @@
                             limit:(NSNumber *)limit
             beforeTokenIdentifier:(NSString *)beforeTokenIdentifier
              afterTokenIdentifier:(NSString *)afterTokenIdentifier
-                          success:(void (^)(NSDictionary * _Nonnull))success
-                          failure:(void (^)(NSError * _Nonnull))failure {
+                          success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                          failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
@@ -88,25 +100,31 @@
     if (afterTokenIdentifier) [parameters setObject:afterTokenIdentifier forKey:@"after"];
     
     [[CLQHTTPSessionManager manager] GET:@"tokens" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)updateTokenWithIdentifier:(NSString *)tokenIdentifier
                          metadata:(NSDictionary *)metadata
-                          success:(void (^)(NSDictionary * _Nonnull))success
-                          failure:(void (^)(NSError * _Nonnull))failure {
+                          success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                          failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
     if (metadata) [parameters setObject:metadata forKey:@"metadata"];
     
     [[CLQHTTPSessionManager manager] PATCH:[@"tokens" stringByAppendingFormat:@"/%@", tokenIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -117,7 +135,8 @@
                          email:(NSString *)email
               antifraudDetails:(CLQAntifraudDetails *)antifraudDetails
               sourceIdentifier:(NSString *)sourceIdentifier
-                       success:(void (^)(NSDictionary * _Nonnull))success failure:(void (^)(NSError * _Nonnull))failure {
+                       success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQCharge * _Nonnull))success
+                       failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSDictionary *parameters = @{
                                  @"amount":amount,
@@ -128,20 +147,26 @@
                                  };
     
     [[CLQHTTPSessionManager manager] POST:@"charges" parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQCharge newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)getChargeWithIdentifier:(NSString *)chargeIdentifier
-                        success:(void (^)(NSDictionary * _Nonnull))success
-                        failure:(void (^)(NSError * _Nonnull))failure {
+                        success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQCharge * _Nonnull))success
+                        failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] GET:[@"charges" stringByAppendingFormat:@"/%@", chargeIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQCharge newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -183,8 +208,8 @@
                        limit:(NSNumber *)limit
       beforeChargeIdentifier:(NSString *)beforeChargeIdentifier
        afterChargeIdentifier:(NSString *)afterChargeIdentifier
-                     success:(void (^)(NSDictionary * _Nonnull))success
-                     failure:(void (^)(NSError * _Nonnull))failure {
+                     success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                     failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
@@ -228,36 +253,44 @@
     if (afterChargeIdentifier) [parameters setObject:afterChargeIdentifier forKey:@"after"];
     
     [[CLQHTTPSessionManager manager] GET:@"charges" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)updateChargeWithIdentifier:(NSString *)chargeIdentifier
                           metadata:(NSDictionary *)metadata
-                           success:(void (^)(NSDictionary * _Nonnull))success
-                           failure:(void (^)(NSError * _Nonnull))failure {
+                           success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                           failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
     if (metadata) [parameters setObject:metadata forKey:@"metadata"];
     
     [[CLQHTTPSessionManager manager] PATCH:[@"charges" stringByAppendingFormat:@"/%@", chargeIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)deleteChargeWithIdentifier:(NSString *)chargeIdentifier
                            success:(void (^)())success
-                           failure:(void (^)(NSError * _Nonnull))failure {
+                           failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] DELETE:[@"charges" stringByAppendingFormat:@"/%@", chargeIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success ();// TODO: shouldn't this be a 204?
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -267,8 +300,8 @@
                                   amount:(NSNumber *)amount
                                   reason:(NSString *)reason
                                 metadata:(NSDictionary *)metadata
-                                 success:(void (^)(NSDictionary * _Nonnull))success
-                                 failure:(void (^)(NSError * _Nonnull))failure {
+                                 success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQRefund * _Nonnull))success
+                                 failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSDictionary *parameters = @{
                                  @"amount":amount,
@@ -278,20 +311,26 @@
                                  };
     
     [[CLQHTTPSessionManager manager] POST:@"refunds" parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQRefund newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)getRefundWithIdentifier:(NSString *)refundIdentifier
-                        success:(void (^)(NSDictionary * _Nonnull))success
-                        failure:(void (^)(NSError * _Nonnull))failure {
+                        success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQRefund * _Nonnull))success
+                        failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] GET:[@"refunds" stringByAppendingFormat:@"/%@", refundIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQRefund newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -302,8 +341,8 @@
                          limit:(NSNumber *)limit
         beforeRefundIdentifier:(NSString *)beforeRefundIdentifier
          afterRefundIdentifier:(NSString *)afterRefundIdentifier
-                       success:(void (^)(NSDictionary * _Nonnull))success
-                       failure:(void (^)(NSError * _Nonnull))failure {
+                       success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                       failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
@@ -316,25 +355,31 @@
     if (afterRefundIdentifier) [parameters setObject:afterRefundIdentifier forKey:@"after"];
     
     [[CLQHTTPSessionManager manager] GET:@"refunds" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)updateRefundWithIdentifier:(NSString *)refundIdentifier
                           metadata:(NSDictionary *)metadata
-                           success:(void (^)(NSDictionary * _Nonnull))success
-                           failure:(void (^)(NSError * _Nonnull))failure {
+                           success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                           failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
     if (metadata) [parameters setObject:metadata forKey:@"metadata"];
     
     [[CLQHTTPSessionManager manager] PATCH:[@"refunds" stringByAppendingFormat:@"/%@", refundIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -348,8 +393,8 @@
                         countryCode:(NSString *)countryCode
                         phoneNumber:(NSString *)phoneNumber
                            metadata:(NSDictionary *)metadata
-                            success:(void (^)(NSDictionary * _Nonnull))success
-                            failure:(void (^)(NSError * _Nonnull))failure {
+                            success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQCustomer * _Nonnull))success
+                            failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSDictionary *parameters = @{
                                  @"first_name":firstName,
@@ -363,20 +408,26 @@
                                  };
     
     [[CLQHTTPSessionManager manager] POST:@"customers" parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQCustomer newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)getCustomerWithIdentifier:(NSString *)customerIdentifier
-                          success:(void (^)(NSDictionary * _Nonnull))success
-                          failure:(void (^)(NSError * _Nonnull))failure {
+                          success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQCustomer * _Nonnull))success
+                          failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] GET:[@"customers" stringByAppendingFormat:@"/%@", customerIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQCustomer newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -390,8 +441,8 @@
                             limit:(NSNumber *)limit
          beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
           afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
-                          success:(void (^)(NSDictionary * _Nonnull))success
-                          failure:(void (^)(NSError * _Nonnull))failure {
+                          success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                          failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
@@ -407,36 +458,44 @@
     if (afterCustomerIdentifier) [parameters setObject:afterCustomerIdentifier forKey:@"after"];
     
     [[CLQHTTPSessionManager manager] GET:@"customers" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)updateCustomerWithIdentifier:(NSString *)customerIdentifier
                             metadata:(NSDictionary *)metadata
-                             success:(void (^)(NSDictionary * _Nonnull))success
-                             failure:(void (^)(NSError * _Nonnull))failure {
+                             success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                             failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
     if (metadata) [parameters setObject:metadata forKey:@"metadata"];
     
     [[CLQHTTPSessionManager manager] PATCH:[@"customers" stringByAppendingFormat:@"/%@", customerIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)deleteCustomerWithIdentifier:(NSString *)customerIdentifier
                              success:(void (^)())success
-                             failure:(void (^)(NSError * _Nonnull))failure {
+                             failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] DELETE:[@"customers" stringByAppendingFormat:@"/%@", customerIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success ();// TODO: shouldn't this be a 204?
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -446,8 +505,8 @@
                  tokenIdentifier:(NSString *)tokenIdentifier
                   shouldValidate:(BOOL)shouldValidate
                         metadata:(NSDictionary *)metadata
-                         success:(void (^)(NSDictionary * _Nonnull))success
-                         failure:(void (^)(NSError * _Nonnull))failure {
+                         success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQCard * _Nonnull))success
+                         failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSDictionary *parameters = @{
                                  @"customer_id":customerIdentifier,
@@ -457,20 +516,26 @@
                                  };
     
     [[CLQHTTPSessionManager manager] POST:@"cards" parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQCard newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)getCardWithIdentifier:(NSString *)cardIdentifier
-                      success:(void (^)(NSDictionary * _Nonnull))success
-                      failure:(void (^)(NSError * _Nonnull))failure {
+                      success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQCard * _Nonnull))success
+                      failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] GET:[@"cards" stringByAppendingFormat:@"/%@", cardIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQCard newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -485,8 +550,8 @@
                        limit:(NSNumber *)limit
     beforeCustomerIdentifier:(NSString *)beforeCustomerIdentifier
      afterCustomerIdentifier:(NSString *)afterCustomerIdentifier
-                     success:(void (^)(NSDictionary * _Nonnull))success
-                     failure:(void (^)(NSError * _Nonnull))failure {
+                     success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                     failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
@@ -503,36 +568,44 @@
     if (afterCustomerIdentifier) [parameters setObject:afterCustomerIdentifier forKey:@"after"];
     
     [[CLQHTTPSessionManager manager] GET:@"cards" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)updateCardWithIdentifier:(NSString *)cardIdentifier
                         metadata:(NSDictionary *)metadata
-                         success:(void (^)(NSDictionary * _Nonnull))success
-                         failure:(void (^)(NSError * _Nonnull))failure {
+                         success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                         failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
     if (metadata) [parameters setObject:metadata forKey:@"metadata"];
     
     [[CLQHTTPSessionManager manager] PATCH:[@"cards" stringByAppendingFormat:@"/%@", cardIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)deleteCardWithIdentifier:(NSString *)cardIdentifier
                          success:(void (^)())success
-                         failure:(void (^)(NSError * _Nonnull))failure {
+                         failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] DELETE:[@"cards" stringByAppendingFormat:@"/%@", cardIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success ();// TODO: shouldn't this be a 204?
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -546,8 +619,8 @@
                  trialDays:(NSNumber *)trialDays
                      limit:(NSNumber *)limit
                   metadata:(NSDictionary *)metadata
-                   success:(void (^)(NSDictionary * _Nonnull))success
-                   failure:(void (^)(NSError * _Nonnull))failure {
+                   success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQPlan * _Nonnull))success
+                   failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSDictionary *parameters = @{
                                  @"name":name,
@@ -561,20 +634,26 @@
                                  };
     
     [[CLQHTTPSessionManager manager] POST:@"plans" parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQPlan newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)getPlanWithIdentifier:(NSString *)planIdentifier
-                      success:(void (^)(NSDictionary * _Nonnull))success
-                      failure:(void (^)(NSError * _Nonnull))failure {
+                      success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQPlan * _Nonnull))success
+                      failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] GET:[@"plans" stringByAppendingFormat:@"/%@", planIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQPlan newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -586,8 +665,8 @@
                      limit:(NSNumber *)limit
       beforePlanIdentifier:(NSString *)beforePlanIdentifier
        afterPlanIdentifier:(NSString *)afterPlanIdentifier
-                   success:(void (^)(NSDictionary * _Nonnull))success
-                   failure:(void (^)(NSError * _Nonnull))failure {
+                   success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                   failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
@@ -602,36 +681,44 @@
     if (afterPlanIdentifier) [parameters setObject:afterPlanIdentifier forKey:@"after"];
     
     [[CLQHTTPSessionManager manager] GET:@"plans" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)updatePlanWithIdentifier:(NSString *)planIdentifier
                         metadata:(NSDictionary *)metadata
-                         success:(void (^)(NSDictionary * _Nonnull))success
-                         failure:(void (^)(NSError * _Nonnull))failure {
+                         success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                         failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
     if (metadata) [parameters setObject:metadata forKey:@"metadata"];
     
     [[CLQHTTPSessionManager manager] PATCH:[@"plans" stringByAppendingFormat:@"/%@", planIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)deletePlanWithIdentifier:(NSString *)planIdentifier
                          success:(void (^)())success
-                         failure:(void (^)(NSError * _Nonnull))failure {
+                         failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] DELETE:[@"plans" stringByAppendingFormat:@"/%@", planIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success ();// TODO: shouldn't this be a 204?
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -640,8 +727,8 @@
 + (void)createSubscriptionWithCardIdentifier:(NSString *)cardIdentifier
                               planIdentifier:(NSString *)planIdentifier
                                     metadata:(NSDictionary *)metadata
-                                     success:(void (^)(NSDictionary * _Nonnull))success
-                                     failure:(void (^)(NSError * _Nonnull))failure {
+                                     success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQSubscription * _Nonnull))success
+                                     failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setObject:cardIdentifier forKey:@"card_id"];
@@ -649,20 +736,26 @@
     if (metadata) [parameters setObject:metadata forKey:@"metadata"];
     
     [[CLQHTTPSessionManager manager] POST:@"subscriptions" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQSubscription newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)getSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
-                              success:(void (^)(NSDictionary * _Nonnull))success
-                              failure:(void (^)(NSError * _Nonnull))failure {
+                              success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQSubscription * _Nonnull))success
+                              failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] GET:[@"subscriptions" stringByAppendingFormat:@"/%@", subscriptionIdentifier] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              [CLQSubscription newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -675,10 +768,10 @@
                           interval:(NSString *)interval
                             status:(NSString *)status
                              limit:(NSNumber *)limit
-          beforeSubscriptionIdentifier:(NSString *)beforeSubscriptionIdentifier
-           afterSubscriptionIdentifier:(NSString *)afterSubscriptionIdentifier
-                           success:(void (^)(NSDictionary * _Nonnull))success
-                           failure:(void (^)(NSError * _Nonnull))failure {
+      beforeSubscriptionIdentifier:(NSString *)beforeSubscriptionIdentifier
+       afterSubscriptionIdentifier:(NSString *)afterSubscriptionIdentifier
+                           success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                           failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
@@ -693,32 +786,46 @@
     if (limit) [parameters setObject:limit forKey:@"limit"];
     if (beforeSubscriptionIdentifier) [parameters setObject:beforeSubscriptionIdentifier forKey:@"before"];
     if (afterSubscriptionIdentifier) [parameters setObject:afterSubscriptionIdentifier forKey:@"after"];
+    
+    [[CLQHTTPSessionManager manager] GET:@"subscriptions" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
+    }];
 }
 
 + (void)updateSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
                                 metadata:(NSDictionary *)metadata
-                                 success:(void (^)(NSDictionary * _Nonnull))success
-                                 failure:(void (^)(NSError * _Nonnull))failure {
+                                 success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                                 failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
     if (metadata) [parameters setObject:metadata forKey:@"metadata"];
     
     [[CLQHTTPSessionManager manager] PATCH:[@"subscriptions" stringByAppendingFormat:@"/%@", subscriptionIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                              responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
 + (void)deleteSubscriptionWithIdentifier:(NSString *)subscriptionIdentifier
                                  success:(void (^)())success
-                                 failure:(void (^)(NSError * _Nonnull))failure {
+                                 failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] DELETE:[@"subscriptions" stringByAppendingFormat:@"/%@", subscriptionIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success ();// TODO: shouldn't this be a 204?
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
+                             [CLQError newWithData:[self getBusinessErrorFromError:error]],
+                             error);
     }];
 }
 
@@ -729,9 +836,22 @@
     NSHTTPURLResponse *reponse = (NSHTTPURLResponse *)task.response;
     if ([reponse isKindOfClass:[NSHTTPURLResponse class]]) {
         return reponse.allHeaderFields;
-    }else{
-        return nil;
     }
+    
+    return nil;
+}
+
++ (NSDictionary *)getBusinessErrorFromError:(NSError *)error {
+    
+    NSData *businessErrorRawData = [error.userInfo objectForKey:AFNetworkingOperationFailingURLResponseDataErrorKey];
+    if ([businessErrorRawData isKindOfClass:[NSData class]]) {
+        NSDictionary *businessErrorData = [NSJSONSerialization JSONObjectWithData:businessErrorRawData options:NSJSONReadingAllowFragments error:nil];
+        if ([businessErrorData isKindOfClass:[NSDictionary class]]) {
+            return businessErrorData;
+        }
+    }
+    
+    return nil;
 }
 
 @end
