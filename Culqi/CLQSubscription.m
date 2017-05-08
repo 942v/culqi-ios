@@ -62,7 +62,7 @@
         if ([object isKindOfClass:[NSString class]])_object = object;
         if ([identifier isKindOfClass:[NSString class]])_identifier = identifier;
         if ([creationDate isKindOfClass:[NSNumber class]])_creationDate = [NSDate dateWithTimeIntervalSince1970:creationDate.doubleValue];
-        if ([status isKindOfClass:[NSString class]])_status = status;
+        if ([status isKindOfClass:[NSString class]])_status = [CLQSubscription getSubscriptionStatusEnumForKey:status];
         if ([currentPeriod isKindOfClass:[NSNumber class]])_currentPeriod = currentPeriod;
         
         if ([totalPeriods isKindOfClass:[NSNumber class]])_totalPeriods = totalPeriods;
@@ -99,7 +99,7 @@
         _object = [aDecoder decodeObjectOfClass:[self class] forKey:@"object"];
         _identifier = [aDecoder decodeObjectOfClass:[self class] forKey:@"identifier"];
         _creationDate = [aDecoder decodeObjectOfClass:[self class] forKey:@"creationDate"];
-        _status = [aDecoder decodeObjectOfClass:[self class] forKey:@"status"];
+        _status = [CLQSubscription getSubscriptionStatusEnumForKey:[aDecoder decodeObjectOfClass:[self class] forKey:@"status"]];
         _currentPeriod = [aDecoder decodeObjectOfClass:[self class] forKey:@"currentPeriod"];
         
         _totalPeriods = [aDecoder decodeObjectOfClass:[self class] forKey:@"totalPeriods"];
@@ -125,7 +125,7 @@
     [aCoder encodeObject:_object forKey:@"object"];
     [aCoder encodeObject:_identifier forKey:@"identifier"];
     [aCoder encodeObject:_creationDate forKey:@"creationDate"];
-    [aCoder encodeObject:_status forKey:@"status"];
+    [aCoder encodeObject:[CLQSubscription getSubscriptionStatusKeyForEnum:_status] forKey:@"status"];
     [aCoder encodeObject:_currentPeriod forKey:@"currentPeriod"];
     
     [aCoder encodeObject:_totalPeriods forKey:@"totalPeriods"];
