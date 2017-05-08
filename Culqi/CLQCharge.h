@@ -8,6 +8,8 @@
 
 #import "CLQBaseModelObject.h"
 
+#import "CLQCurrencyCode.h"
+
 @class CLQToken, CLQCard, CLQClient, CLQOutcome, CLQAntifraudDetails, CLQFeeDetails, CLQOperation;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -21,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) NSNumber *currentAmount;
 @property (nonatomic, strong, readonly) NSNumber *installments;
 @property (nonatomic, strong, readonly) NSNumber *installmentsAmount;
-@property (nonatomic, copy, readonly) NSString *currencyCode;
+@property (nonatomic, assign, readonly) CLQCurrencyCodeType currencyCode;
 @property (nonatomic, copy, readonly) NSString *email;
 @property (nonatomic, copy, readonly) NSString *descriptionText;
 @property (nonatomic, strong, readonly) CLQToken *token;

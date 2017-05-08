@@ -23,7 +23,7 @@
     
     self = [super init];
     if (self) {
-        if ([type isKindOfClass:[NSString class]])_type = type;
+        if ([type isKindOfClass:[NSString class]])_type = [CLQOperation getOperationTypeEnumForKey:type];
         if ([identifier isKindOfClass:[NSString class]])_identifier = identifier;
         if ([creationDate isKindOfClass:[NSNumber class]])_creationDate = [NSDate dateWithTimeIntervalSince1970:creationDate.doubleValue];
     }
@@ -35,7 +35,7 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super init];
     if (self) {
-        _type = [aDecoder decodeObjectOfClass:[self class] forKey:@"type"];
+        _type = [CLQOperation getOperationTypeEnumForKey:[aDecoder decodeObjectOfClass:[self class] forKey:@"type"]];
         _identifier = [aDecoder decodeObjectOfClass:[self class] forKey:@"identifier"];
         _creationDate = [aDecoder decodeObjectOfClass:[self class] forKey:@"creationDate"];
     }
@@ -43,9 +43,44 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:_type forKey:@"type"];
+    [aCoder encodeObject:[CLQOperation getOperationTypeKeyForEnum:_type] forKey:@"type"];
     [aCoder encodeObject:_identifier forKey:@"identifier"];
     [aCoder encodeObject:_creationDate forKey:@"creationDate"];
+}
+
+@end
+
+@implementation CLQOperation (Helpers)
+
++ (CLQOperationType)getOperationTypeEnumForKey:(NSString *)operationType {
+    
+    if ([operationType isEqualToString:@"devolucion"]) {
+        return CLQOperationTypeReturn;
+    }else if ([operationType isEqualToString:@"disputa"]) {
+        return CLQOperationTypeDispute;
+    }else if ([operationType isEqualToString:@"fraude"]) {
+        return CLQOperationTypeFraud;
+    }
+    
+    return CLQOperationTypeUnknown;
+}
+
++ (NSString *)getOperationTypeKeyForEnum:(CLQOperationType)operationType {
+    
+    switch (operationType) {
+        case CLQOperationTypeReturn:
+            return @"devolucion";
+            break;
+        case CLQOperationTypeDispute:
+            return @"disputa";
+            break;
+        case CLQOperationTypeFraud:
+            return @"fraude";
+            break;
+        default:
+            return NULL;
+            break;
+    }
 }
 
 @end

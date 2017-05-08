@@ -37,8 +37,8 @@
         if ([identifier isKindOfClass:[NSString class]])_identifier = identifier;
         if ([amount isKindOfClass:[NSNumber class]])_amount = amount;
         if ([creationDate isKindOfClass:[NSNumber class]])_creationDate = [NSDate dateWithTimeIntervalSince1970:creationDate.doubleValue];
-        if ([currencyCode isKindOfClass:[NSString class]])_currencyCode = currencyCode;
-        if ([interval isKindOfClass:[NSString class]])_interval = interval;
+        if ([currencyCode isKindOfClass:[NSString class]])_currencyCode = [CLQCurrencyCode getCurrencyCodeTypeEnumForKey:currencyCode];
+        if ([interval isKindOfClass:[NSString class]])_interval = [CLQPlan getPlanIntervalEnumForKey:interval];
         if ([intervalCount isKindOfClass:[NSNumber class]])_intervalCount = intervalCount;
         if ([limit isKindOfClass:[NSNumber class]])_limit = limit;
         if ([name isKindOfClass:[NSString class]])_name = name;
@@ -58,9 +58,9 @@
         _object = [aDecoder decodeObjectOfClass:[self class] forKey:@"object"];
         _identifier = [aDecoder decodeObjectOfClass:[self class] forKey:@"identifier"];
         _amount = [aDecoder decodeObjectOfClass:[self class] forKey:@"amount"];
-        _currencyCode = [aDecoder decodeObjectOfClass:[self class] forKey:@"currencyCode"];
+        _currencyCode = [CLQCurrencyCode getCurrencyCodeTypeEnumForKey:[aDecoder decodeObjectOfClass:[self class] forKey:@"currencyCode"]];
         _creationDate = [aDecoder decodeObjectOfClass:[self class] forKey:@"creationDate"];
-        _interval = [aDecoder decodeObjectOfClass:[self class] forKey:@"interval"];
+        _interval = [CLQPlan getPlanIntervalEnumForKey:[aDecoder decodeObjectOfClass:[self class] forKey:@"interval"]];
         _intervalCount = [aDecoder decodeObjectOfClass:[self class] forKey:@"intervalCount"];
         _limit = [aDecoder decodeObjectOfClass:[self class] forKey:@"limit"];
         _name = [aDecoder decodeObjectOfClass:[self class] forKey:@"name"];
@@ -76,9 +76,9 @@
     [aCoder encodeObject:_object forKey:@"object"];
     [aCoder encodeObject:_identifier forKey:@"identifier"];
     [aCoder encodeObject:_amount forKey:@"amount"];
-    [aCoder encodeObject:_currencyCode forKey:@"currencyCode"];
+    [aCoder encodeObject:[CLQCurrencyCode getCurrencyCodeTypeKeyForEnum:_currencyCode] forKey:@"currencyCode"];
     [aCoder encodeObject:_creationDate forKey:@"creationDate"];
-    [aCoder encodeObject:_interval forKey:@"interval"];
+    [aCoder encodeObject:[CLQPlan getPlanIntervalKeyForEnum:_interval] forKey:@"interval"];
     [aCoder encodeObject:_intervalCount forKey:@"intervalCount"];
     [aCoder encodeObject:_limit forKey:@"limit"];
     [aCoder encodeObject:_name forKey:@"name"];
@@ -86,6 +86,46 @@
     [aCoder encodeObject:_trialDays forKey:@"trialDays"];
     [aCoder encodeObject:_totalSubscriptions forKey:@"totalSubscriptions"];
     [aCoder encodeObject:_metadata forKey:@"metadata"];
+}
+
+@end
+
+@implementation CLQPlan (Helpers)
+
++ (CLQPlanInterval)getPlanIntervalEnumForKey:(NSString *)planInterval {
+    
+    if ([planInterval isEqualToString:@"dias"]) {
+        return CLQPlanIntervalDaily;
+    }else if ([planInterval isEqualToString:@"semanas"]) {
+        return CLQPlanIntervalWeekly;
+    }else if ([planInterval isEqualToString:@"meses"]) {
+        return CLQPlanIntervalMonthly;
+    }else if ([planInterval isEqualToString:@"años"]) {
+        return CLQPlanIntervalYearly;
+    }
+    
+    return CLQPlanIntervalUnknown;
+}
+
++ (NSString *)getPlanIntervalKeyForEnum:(CLQPlanInterval)planInterval {
+    
+    switch (planInterval) {
+        case CLQPlanIntervalDaily:
+            return @"dias";
+            break;
+        case CLQPlanIntervalWeekly:
+            return @"semanas";
+            break;
+        case CLQPlanIntervalMonthly:
+            return @"meses";
+            break;
+        case CLQPlanIntervalYearly:
+            return @"años";
+            break;
+        default:
+            return NULL;
+            break;
+    }
 }
 
 @end

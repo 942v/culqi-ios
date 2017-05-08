@@ -8,6 +8,21 @@
 
 #import "CLQBaseModelObject.h"
 
+typedef enum : NSUInteger {
+    CLQCardBrandUnkown,
+    CLQCardBrandVisa,
+    CLQCardBrandMastercard,
+    CLQCardBrandAmericanExpress,
+    CLQCardBrandDinersClub
+} CLQCardBrand;
+
+typedef enum : NSUInteger {
+    CLQCardTypeUnkown,
+    CLQCardTypeCredito,
+    CLQCardTypeDebito,
+    CLQCardTypePrepagada
+} CLQCardType;
+
 NS_ASSUME_NONNULL_BEGIN
 @class CLQCardIssuer;
 
@@ -15,11 +30,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly) NSString *object;
 @property (nonatomic, copy, readonly) NSString *bin;
-@property (nonatomic, copy, readonly) NSString *cardBrand;
-@property (nonatomic, copy, readonly) NSString *cardType;
+@property (nonatomic, assign, readonly) CLQCardBrand cardBrand;
+@property (nonatomic, assign, readonly) CLQCardType cardType;
 @property (nonatomic, copy, readonly) NSString *cardCategory;
 @property (nonatomic, strong, readonly) CLQCardIssuer *issuer;
 @property (nonatomic, strong, readonly) NSArray <NSNumber *> *installmentsAllowed;
+
+@end
+
+@interface CLQIssuerIdentificationNumber (Helpers)
+
++ (NSString *)getCardBrandKeyForEnum:(CLQCardBrand)cardBrand;
++ (CLQCardBrand)getCardBrandEnumForKey:(NSString *)cardBrand;
+
++ (NSString *)getCardTypeKeyForEnum:(CLQCardType)cardType;
++ (CLQCardType)getCardTypeEnumForKey:(NSString *)cardType;
 
 @end
 NS_ASSUME_NONNULL_END

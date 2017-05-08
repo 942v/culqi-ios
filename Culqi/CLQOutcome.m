@@ -26,7 +26,7 @@
     self = [super init];
     if (self) {
         if ([type isKindOfClass:[NSString class]])_type = type;
-        if ([code isKindOfClass:[NSString class]])_code = code;
+        if ([code isKindOfClass:[NSString class]])_code = [CLQOutcome getOutcomeCodeEnumForKey:code];
         if ([declineCode isKindOfClass:[NSString class]])_declineCode = declineCode;
         if ([merchantMessage isKindOfClass:[NSString class]])_merchantMessage = merchantMessage;
         if ([userMessage isKindOfClass:[NSString class]])_userMessage = userMessage;
@@ -40,7 +40,7 @@
     self = [super init];
     if (self) {
         _type = [aDecoder decodeObjectOfClass:[self class] forKey:@"type"];
-        _code = [aDecoder decodeObjectOfClass:[self class] forKey:@"code"];
+        _code = [CLQOutcome getOutcomeCodeEnumForKey:[aDecoder decodeObjectOfClass:[self class] forKey:@"code"]];
         _declineCode = [aDecoder decodeObjectOfClass:[self class] forKey:@"declineCode"];
         _merchantMessage = [aDecoder decodeObjectOfClass:[self class] forKey:@"merchantMessage"];
         _userMessage = [aDecoder decodeObjectOfClass:[self class] forKey:@"userMessage"];
@@ -50,10 +50,40 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:_type forKey:@"type"];
-    [aCoder encodeObject:_code forKey:@"code"];
+    [aCoder encodeObject:[CLQOutcome getOutcomeCodeKeyForEnum:_code] forKey:@"code"];
     [aCoder encodeObject:_declineCode forKey:@"declineCode"];
     [aCoder encodeObject:_merchantMessage forKey:@"merchantMessage"];
     [aCoder encodeObject:_userMessage forKey:@"userMessage"];
+}
+
+@end
+
+@implementation CLQOutcome (Helpers)
+
++ (CLQOutcomeCode)getOutcomeCodeEnumForKey:(NSString *)outcomeCode {
+    
+    if ([outcomeCode isEqualToString:@"succesfull_charge"]) {
+        return CLQOutcomeCodeSuccesfullCharge;
+    }else if ([outcomeCode isEqualToString:@"card_declined"]) {
+        return CLQOutcomeCodeCardDeclined;
+    }
+    
+    return CLQOutcomeCodeUnkown;
+}
+
++ (NSString *)getOutcomeCodeKeyForEnum:(CLQOutcomeCode)outcomeCode {
+    
+    switch (outcomeCode) {
+        case CLQOutcomeCodeSuccesfullCharge:
+            return @"succesfull_charge";
+            break;
+        case CLQOutcomeCodeCardDeclined:
+            return @"card_declined";
+            break;
+        default:
+            return NULL;
+            break;
+    }
 }
 
 @end

@@ -8,6 +8,13 @@
 
 #import "CLQBaseModelObject.h"
 
+typedef enum : NSUInteger {
+    CLQSubscriptionStatusUnknown,
+    CLQSubscriptionStatusActive,
+    CLQSubscriptionStatusCanceled,
+    CLQSubscriptionStatusFinished,
+} CLQSubscriptionStatus;
+
 @class CLQCharge, CLQPlan, CLQCard;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -16,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *object;
 @property (nonatomic, copy, readonly) NSString *identifier;
 @property (nonatomic, strong, readonly) NSDate *creationDate;
-@property (nonatomic, copy, readonly) NSString *status;
+@property (nonatomic, assign, readonly) CLQSubscriptionStatus status;
 @property (nonatomic, strong, readonly) NSNumber *currentPeriod;
 @property (nonatomic, strong, readonly) NSNumber *totalPeriods;
 @property (nonatomic, strong, readonly) NSDate *currentPeriodStartDate;
@@ -31,6 +38,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) CLQPlan *plan;
 @property (nonatomic, strong, readonly) CLQCard *card;
 @property (nonatomic, strong, readonly) NSDictionary *metadata;
+
+@end
+
+@interface CLQSubscription (Helpers)
+
++ (NSString *)getSubscriptionStatusKeyForEnum:(CLQSubscriptionStatus)subscriptionStatus;
++ (CLQSubscriptionStatus)getSubscriptionStatusEnumForKey:(NSString *)subscriptionStatus;
 
 @end
 NS_ASSUME_NONNULL_END

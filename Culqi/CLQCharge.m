@@ -91,7 +91,7 @@
         if ([currentAmount isKindOfClass:[NSNumber class]])_currentAmount = currentAmount;
         if ([installments isKindOfClass:[NSNumber class]])_installments = installments;
         if ([installmentsAmount isKindOfClass:[NSNumber class]])_installmentsAmount = installmentsAmount;
-        if ([currencyCode isKindOfClass:[NSNumber class]])_currencyCode = currencyCode;
+        if ([currencyCode isKindOfClass:[NSString class]])_currencyCode = [CLQCurrencyCode getCurrencyCodeTypeEnumForKey:currencyCode];
         if ([email isKindOfClass:[NSString class]])_email = email;
         if ([descriptionText isKindOfClass:[NSString class]])_descriptionText = descriptionText;
         if ([sourceData isKindOfClass:[NSDictionary class]]) {
@@ -135,7 +135,7 @@
         _currentAmount = [aDecoder decodeObjectOfClass:[self class] forKey:@"currentAmount"];
         _installments = [aDecoder decodeObjectOfClass:[self class] forKey:@"installments"];
         _installmentsAmount = [aDecoder decodeObjectOfClass:[self class] forKey:@"installmentsAmount"];
-        _currencyCode = [aDecoder decodeObjectOfClass:[self class] forKey:@"currencyCode"];
+        _currencyCode = [CLQCurrencyCode getCurrencyCodeTypeEnumForKey:[aDecoder decodeObjectOfClass:[self class] forKey:@"currencyCode"]];
         _email = [aDecoder decodeObjectOfClass:[self class] forKey:@"email"];
         
         _descriptionText = [aDecoder decodeObjectOfClass:[self class] forKey:@"descriptionText"];
@@ -174,7 +174,7 @@
     [aCoder encodeObject:_currentAmount forKey:@"currentAmount"];
     [aCoder encodeObject:_installments forKey:@"installments"];
     [aCoder encodeObject:_installmentsAmount forKey:@"installmentsAmount"];
-    [aCoder encodeObject:_currencyCode forKey:@"currencyCode"];
+    [aCoder encodeObject:[CLQCurrencyCode getCurrencyCodeTypeKeyForEnum:_currencyCode] forKey:@"currencyCode"];
     [aCoder encodeObject:_email forKey:@"email"];
     
     [aCoder encodeObject:_descriptionText forKey:@"descriptionText"];

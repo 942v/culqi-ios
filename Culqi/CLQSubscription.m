@@ -146,3 +146,38 @@
 }
 
 @end
+
+@implementation CLQSubscription (Helpers)
+
++ (CLQSubscriptionStatus)getSubscriptionStatusEnumForKey:(NSString *)subscriptionStatus {
+    
+    if ([subscriptionStatus isEqualToString:@"active"]) {
+        return CLQSubscriptionStatusActive;
+    }else if ([subscriptionStatus isEqualToString:@"canceled"]) {
+        return CLQSubscriptionStatusCanceled;
+    }else if ([subscriptionStatus isEqualToString:@"finished"]) {
+        return CLQSubscriptionStatusFinished;
+    }
+    
+    return CLQSubscriptionStatusUnknown;
+}
+
++ (NSString *)getSubscriptionStatusKeyForEnum:(CLQSubscriptionStatus)subscriptionStatus {
+    
+    switch (subscriptionStatus) {
+        case CLQSubscriptionStatusActive:
+            return @"active";
+            break;
+        case CLQSubscriptionStatusCanceled:
+            return @"canceled";
+            break;
+        case CLQSubscriptionStatusFinished:
+            return @"finished";
+            break;
+        default:
+            return NULL;
+            break;
+    }
+}
+
+@end

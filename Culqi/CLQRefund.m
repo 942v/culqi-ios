@@ -32,7 +32,7 @@
         if ([chargeIdentifier isKindOfClass:[NSString class]])_chargeIdentifier = chargeIdentifier;
         if ([creationDate isKindOfClass:[NSNumber class]])_creationDate = [NSDate dateWithTimeIntervalSince1970:creationDate.doubleValue];
         if ([amount isKindOfClass:[NSNumber class]])_amount = amount;
-        if ([reason isKindOfClass:[NSString class]])_reason = reason;
+        if ([reason isKindOfClass:[NSString class]])_reason = [CLQRefund getRefundReasonEnumForKey:reason];
         if ([metadata isKindOfClass:[NSDictionary class]])_metadata = metadata;
     }
     return self;
@@ -48,7 +48,7 @@
         _chargeIdentifier = [aDecoder decodeObjectOfClass:[self class] forKey:@"chargeIdentifier"];
         _creationDate = [aDecoder decodeObjectOfClass:[self class] forKey:@"creationDate"];
         _amount = [aDecoder decodeObjectOfClass:[self class] forKey:@"amount"];
-        _reason = [aDecoder decodeObjectOfClass:[self class] forKey:@"reason"];
+        _reason = [CLQRefund getRefundReasonEnumForKey:[aDecoder decodeObjectOfClass:[self class] forKey:@"reason"]];
         _metadata = [aDecoder decodeObjectOfClass:[self class] forKey:@"metadata"];
     }
     return self;
@@ -60,8 +60,43 @@
     [aCoder encodeObject:_chargeIdentifier forKey:@"chargeIdentifier"];
     [aCoder encodeObject:_creationDate forKey:@"creationDate"];
     [aCoder encodeObject:_amount forKey:@"amount"];
-    [aCoder encodeObject:_reason forKey:@"reason"];
+    [aCoder encodeObject:[CLQRefund getRefundReasonKeyForEnum:_reason] forKey:@"reason"];
     [aCoder encodeObject:_metadata forKey:@"metadata"];
+}
+
+@end
+
+@implementation CLQRefund (Helpers)
+
++ (CLQRefundReason)getRefundReasonEnumForKey:(NSString *)refundReason {
+    
+    if ([refundReason isEqualToString:@"duplicado"]) {
+        return CLQRefundReasonDuplicate;
+    }else if ([refundReason isEqualToString:@"fraudulento"]) {
+        return CLQRefundReasonFraud;
+    }else if ([refundReason isEqualToString:@"solicitud_comprador"]) {
+        return CLQRefundReasonBuyerRequest;
+    }
+    
+    return CLQRefundReasonUnknown;
+}
+
++ (NSString *)getRefundReasonKeyForEnum:(CLQRefundReason)refundReason {
+    
+    switch (refundReason) {
+        case CLQRefundReasonDuplicate:
+            return @"duplicado";
+            break;
+        case CLQRefundReasonFraud:
+            return @"fraudulento";
+            break;
+        case CLQRefundReasonBuyerRequest:
+            return @"solicitud_comprador";
+            break;
+        default:
+            return NULL;
+            break;
+    }
 }
 
 @end

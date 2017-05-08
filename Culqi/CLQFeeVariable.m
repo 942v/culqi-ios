@@ -23,7 +23,7 @@
     
     self = [super init];
     if (self) {
-        if ([currencyCode isKindOfClass:[NSString class]])_currencyCode = currencyCode;
+        if ([currencyCode isKindOfClass:[NSString class]])_currencyCode = [CLQCurrencyCode getCurrencyCodeTypeEnumForKey:currencyCode];
         if ([commision isKindOfClass:[NSString class]])_commision = commision;
         if ([total isKindOfClass:[NSNumber class]])_total = total;
     }
@@ -35,7 +35,7 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super init];
     if (self) {
-        _currencyCode = [aDecoder decodeObjectOfClass:[self class] forKey:@"currencyCode"];
+        _currencyCode = [CLQCurrencyCode getCurrencyCodeTypeEnumForKey:[aDecoder decodeObjectOfClass:[self class] forKey:@"currencyCode"]];
         _commision = [aDecoder decodeObjectOfClass:[self class] forKey:@"commision"];
         _total = [aDecoder decodeObjectOfClass:[self class] forKey:@"total"];
     }
@@ -43,7 +43,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:_currencyCode forKey:@"currencyCode"];
+    [aCoder encodeObject:[CLQCurrencyCode getCurrencyCodeTypeKeyForEnum:_currencyCode] forKey:@"currencyCode"];
     [aCoder encodeObject:_commision forKey:@"commision"];
     [aCoder encodeObject:_total forKey:@"total"];
 }

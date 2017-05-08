@@ -8,6 +8,13 @@
 
 #import "CLQBaseModelObject.h"
 
+typedef enum : NSUInteger {
+    CLQRefundReasonUnknown,
+    CLQRefundReasonDuplicate,
+    CLQRefundReasonFraud,
+    CLQRefundReasonBuyerRequest
+} CLQRefundReason;
+
 NS_ASSUME_NONNULL_BEGIN
 @interface CLQRefund : CLQBaseModelObject
 
@@ -16,8 +23,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *chargeIdentifier;
 @property (nonatomic, strong, readonly) NSDate *creationDate;
 @property (nonatomic, strong, readonly) NSNumber *amount;
-@property (nonatomic, copy, readonly) NSString *reason;
+@property (nonatomic, assign, readonly) CLQRefundReason reason;
 @property (nonatomic, strong, readonly) NSDictionary *metadata;
+
+@end
+
+@interface CLQRefund (Helpers)
+
++ (NSString *)getRefundReasonKeyForEnum:(CLQRefundReason)refundReason;
++ (CLQRefundReason)getRefundReasonEnumForKey:(NSString *)refundReason;
 
 @end
 NS_ASSUME_NONNULL_END

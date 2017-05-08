@@ -8,10 +8,12 @@
 
 #import "CLQBaseModelObject.h"
 
+#import "CLQCurrencyCode.h"
+
 NS_ASSUME_NONNULL_BEGIN
 @interface CLQFeeVariable : CLQBaseModelObject
 
-@property (nonatomic, copy, readonly) NSString *currencyCode;
+@property (nonatomic, assign, readonly) CLQCurrencyCodeType currencyCode;
 @property (nonatomic, copy, readonly) NSNumber *commision;
 @property (nonatomic, strong, readonly) NSNumber *total;
 
