@@ -198,7 +198,7 @@
     [aCoder encodeObject:@(_paid) forKey:@"paid"];
     [aCoder encodeObject:_statementDescriptor forKey:@"statementDescriptor"];
     [aCoder encodeObject:_operation forKey:@"operation"];
-    [aCoder encodeObject:client forKey:@"client"];
+    [aCoder encodeObject:_client forKey:@"client"];
 }
 
 @end

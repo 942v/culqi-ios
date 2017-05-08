@@ -12,11 +12,11 @@
 
 + (instancetype)newWithData:(NSDictionary *)data {
     
-    NSNumber *unixDate = [data objectForKey:@"date"];
-    NSString *environment = [data objectForKey:@"x-culqi-environment"];
-    NSString *trackingIdentifier = [data objectForKey:@"x-culqi-tracking-id"];
-    NSString *version = [data objectForKey:@"x-culqi-version"];
-    NSString *contentType = [data objectForKey:@"content-type"];
+    NSNumber *unixDate = [data objectForKey:@"date"]; // TODO: check this
+    NSString *environment = [data objectForKey:@"X-CULQI-ENVIRONMENT"];
+    NSString *trackingIdentifier = [data objectForKey:@"X-CULQI-TRACKING-ID"];
+    NSString *version = [data objectForKey:@"X-CULQI-VERSION"];
+    NSString *contentType = [data objectForKey:@"Content-Type"];
     
     return [[CLQResponseHeaders alloc] initWithUnixDate:unixDate environment:environment trackingIdentifier:trackingIdentifier version:version contentType:contentType];
 }

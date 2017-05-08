@@ -22,13 +22,9 @@ TODO: Add long description of the pod here.
                        DESC
 
   s.homepage         = 'https://www.culqi.com'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-##############################################################################################
-  s.author           = { 'Guillermo Saenz' => 'gsaenz@proatomicdev.com' } # <--------Change this
-##############################################################################################
+  s.author           = { 'Guillermo Saenz' => 'gsaenz@proatomicdev.com' }
   s.source           = { :git => 'https://github.com/culqi/culqi-ios.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
 
@@ -43,7 +39,7 @@ TODO: Add long description of the pod here.
 
   s.subspec "Networking" do |ss|
     ss.dependency 'Culqi/Models'
-    ss.dependency 'AFNetworking'#, '~> 2.3'
+    ss.dependency 'AFNetworking'
     ss.source_files = 'Culqi/CLQ{HTTPSessionManager,WebServices}.{h,m}'
     ss.public_header_files = 'Culqi/CLQ{HTTPSessionManager,WebServices}.h'
   end

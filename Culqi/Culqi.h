@@ -8,25 +8,27 @@
 
 #import <Foundation/Foundation.h>
 
-@class CLQCard;
-@class CLQToken;
+@class CLQResponseHeaders, CLQToken, CLQCard;
 
-NS_ASSUME_NONNULL_BEGIN
 @interface Culqi : NSObject
 
-@property (nonatomic, copy, readonly) NSString *merchantCode;
+@property (nonatomic, copy, readonly) NSString * _Nonnull merchantCode;
 
 /**
  * gets singleton object.
  * @return singleton
  */
-+ (Culqi *)sharedInstance;
++ (Culqi *_Nonnull)sharedInstance;
 
-- (void)setMerchantCode:(NSString *)merchantCode;
+- (void)setMerchantCode:(NSString *_Nonnull)merchantCode;
 
-- (void)createTokenForCard:(CLQCard *)card
-                   success:(void (^)(CLQToken *token))success
-                   failure:(void (^)(NSError *error))failure;
+- (void)createTokenWithCardNumber:(NSString *_Nonnull)cardNumber
+                              cvv:(NSString *_Nonnull)cvv
+                  expirationMonth:(NSString *_Nonnull)expirationMonth
+                   expirationYear:(NSString *_Nonnull)expirationYear
+                            email:(NSString *_Nonnull)email
+                         metadata:(NSDictionary * _Nullable)metadata
+                          success:(void (^_Nullable)(CLQResponseHeaders *_Nonnull responseHeaders, CLQToken * _Nonnull token))success
+                          failure:(void (^_Nullable)(CLQResponseHeaders *_Nonnull responseHeaders, NSError * _Nonnull error))failure;
 
 @end
-NS_ASSUME_NONNULL_END

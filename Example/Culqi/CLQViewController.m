@@ -8,9 +8,7 @@
 
 #import "CLQViewController.h"
 
-#import <Culqi/Culqi.h>
-#import <Culqi/CLQCard.h>
-#import <Culqi/CLQToken.h>
+@import Culqi;
 
 @interface CLQViewController ()
 
@@ -29,7 +27,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	
+    
     [self setTestData];
 }
 
@@ -63,21 +61,9 @@
     
     // TODO: validate fields
     
-    NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
-    [numberFormatter setFormatterBehavior:[NSNumberFormatter defaultFormatterBehavior]];
-    
-    CLQCard *card = [CLQCard newWithNumber:[numberFormatter numberFromString:self.txtFieldCardNumber.text]
-                                       CVC:[numberFormatter numberFromString:self.txtFieldCVC.text]
-                                  expMonth:[numberFormatter numberFromString:self.txtFieldExpMonth.text]
-                                   expYear:[numberFormatter numberFromString:self.txtFieldExpYear.text]
-                     
-                                 firstName:self.txtFieldName.text
-                                  lastName:self.txtFieldLastName.text
-                                     email:self.txtFieldEmail.text];
-    
-    [[Culqi sharedInstance] createTokenForCard:card success:^(CLQToken * _Nonnull token) {
+    [[Culqi sharedInstance] createTokenWithCardNumber:self.txtFieldCardNumber.text cvv:self.txtFieldCVC.text expirationMonth:self.txtFieldExpMonth.text expirationYear:self.txtFieldExpYear.text email:self.txtFieldEmail.text metadata:nil success:^(CLQResponseHeaders * _Nonnull responseHeaders, CLQToken * _Nonnull token) {
         NSLog(@"Did create token with identifier: %@", token.identifier);
-    } failure:^(NSError * _Nonnull error) {
+    } failure:^(CLQResponseHeaders * _Nonnull responseHeaders, NSError * _Nonnull error) {
         NSLog(@"Error Creating token: %@", error.localizedDescription);
     }];
 }

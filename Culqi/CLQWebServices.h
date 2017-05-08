@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class CLQAntifraudDetails;
+@class CLQResponseHeaders, CLQToken, CLQAntifraudDetails;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface CLQWebServices : NSObject
@@ -25,8 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
                    expirationYear:(NSString *)expirationYear
                             email:(NSString *)email
                          metadata:(NSDictionary *)metadata
-                          success:(void (^)(NSDictionary *responseObject))success
-                          failure:(void (^)(NSError *error))failure;
+                          success:(void (^)(CLQResponseHeaders *responseHeaders, CLQToken *token))success
+                          failure:(void (^)(CLQResponseHeaders *responseHeaders, NSError *error))failure;
 
 + (void)getTokenWithIdentifier:(NSString *)tokenIdentifier
                        success:(void (^)(NSDictionary *responseObject))success

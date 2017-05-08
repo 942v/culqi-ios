@@ -10,6 +10,9 @@
 
 #import "CLQHTTPSessionManager.h"
 
+#import "CLQResponseHeaders.h"
+#import "CLQToken.h"
+
 @implementation CLQWebServices
 
 #pragma mark - Auth
@@ -26,9 +29,9 @@
                   expirationMonth:(NSString *)expirationMonth
                    expirationYear:(NSString *)expirationYear
                             email:(NSString *)email
-                         metadata:(NSDictionary *)metadata
-                          success:(void (^)(NSDictionary * _Nonnull))success
-                          failure:(void (^)(NSError * _Nonnull))failure {
+                         metadata:(nonnull NSDictionary *)metadata
+                          success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQToken * _Nonnull))success
+                          failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
@@ -40,9 +43,10 @@
     if (metadata) [parameters setObject:metadata forKey:@"metadata"];
     
     [[CLQHTTPSessionManager manager] POST:@"tokens" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success (responseObject);
+        
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]], [CLQToken newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        if (failure) failure(error);
+        if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]], error);
     }];
 }
 
@@ -716,6 +720,18 @@
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) failure(error);
     }];
+}
+
+#pragma mark - Helpers
+
++ (NSDictionary *)headersFromResponseTask:(NSURLSessionDataTask *)task {
+    
+    NSHTTPURLResponse *reponse = (NSHTTPURLResponse *)task.response;
+    if ([reponse isKindOfClass:[NSHTTPURLResponse class]]) {
+        return reponse.allHeaderFields;
+    }else{
+        return nil;
+    }
 }
 
 @end

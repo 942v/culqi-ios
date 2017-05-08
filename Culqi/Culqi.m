@@ -14,7 +14,6 @@
 
 #import "CLQCard.h"
 #import "CLQToken.h"
-#import "CLQTokenCard.h"
 
 @implementation Culqi
 
@@ -83,47 +82,24 @@ static bool isFirstAccess = YES;
 
 #pragma mark - Tokenization
 
-- (void)createTokenForCard:(CLQCard *)card success:(void (^)(CLQToken *))success failure:(void (^)(NSError *))failure {
+- (void)createTokenWithCardNumber:(NSString *)cardNumber
+                              cvv:(NSString *)cvv
+                  expirationMonth:(NSString *)expirationMonth
+                   expirationYear:(NSString *)expirationYear
+                            email:(NSString *)email
+                         metadata:(NSDictionary * _Nullable)metadata
+                          success:(void (^ _Nullable)(CLQResponseHeaders * _Nonnull, CLQToken * _Nonnull))success
+                          failure:(void (^ _Nullable)(CLQResponseHeaders * _Nonnull, NSError * _Nonnull))failure {
     
-    [CLQWebServices createTokenForEmail:card.email firstName:card.firstName lastName:card.lastName CVC:card.cvc expMonth:card.expMonth expYear:card.expYear number:card.number success:^(NSDictionary *responseObject) {
-        
-        CLQToken *token = [self createTokenFromDictionary:responseObject];
-        
+    [CLQWebServices createTokenWithCardNumber:cardNumber cvv:cvv expirationMonth:expirationMonth expirationYear:expirationYear email:email metadata:metadata success:^(CLQResponseHeaders * _Nonnull responseHeaders, CLQToken * _Nonnull token) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (success) success(token);
+            if (success) success(responseHeaders, token);
         });
-    } failure:^(NSError *error) {
+    } failure:^(CLQResponseHeaders * _Nonnull responseHeaders, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (failure) failure(error);
+            if (failure) failure(responseHeaders, error);
         });
     }];
-}
-
-#pragma mark - Object Parsing
-
-- (CLQToken *)createTokenFromDictionary:(NSDictionary *)tokenDictionary {
-    
-    NSString *identifier = [tokenDictionary objectForKey:@"id"];
-    NSString *email = [tokenDictionary objectForKey:@"correo_electronico"];
-    NSString *objectType = [tokenDictionary objectForKey:@"objeto"];
-    // TODO: set createdAt
-    
-    NSDictionary *tokenCardDictionary = [tokenDictionary objectForKey:@"tarjeta"];
-    
-    CLQTokenCard *tokenCard = [self createTokenCardFromDictionary:tokenCardDictionary];
-
-    return [CLQToken newWithIdentifier:identifier email:email createdAt:@"" objectType:objectType tokenCard:tokenCard];
-}
-
-- (CLQTokenCard *)createTokenCardFromDictionary:(NSDictionary *)tokenCardDictionary {
-    
-    NSString *brand = [tokenCardDictionary objectForKey:@"marca"];
-    NSString *number = [tokenCardDictionary objectForKey:@"numero"];
-    NSString *bin = [tokenCardDictionary objectForKey:@"bin"];
-    NSString *lastName = [tokenCardDictionary objectForKey:@"apellido"];
-    NSString *firstName = [tokenCardDictionary objectForKey:@"nombre"];
-    
-    return [CLQTokenCard newWithBrand:brand number:number bin:bin lastName:lastName firstName:firstName];
 }
 
 @end
