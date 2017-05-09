@@ -12,7 +12,7 @@
 
 + (instancetype)newWithData:(NSDictionary *)data {
     
-    NSNumber *unixDate = [data objectForKey:@"date"]; // TODO: check this
+    NSNumber *unixDate = [data objectForKey:@"Date"]; // TODO: check this: Date = "Tue, 09 May 2017 15:29:19 GMT";
     NSString *environment = [data objectForKey:@"X-CULQI-ENVIRONMENT"];
     NSString *trackingIdentifier = [data objectForKey:@"X-CULQI-TRACKING-ID"];
     NSString *version = [data objectForKey:@"X-CULQI-VERSION"];

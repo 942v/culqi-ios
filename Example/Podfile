@@ -1,11 +1,12 @@
 use_frameworks!
 
 target 'Culqi_Example' do
-  pod 'Culqi', :path => '../'
+    pod 'Culqi', :path => '../'
+    
+    pod 'SVProgressHUD'
+    pod 'TPKeyboardAvoiding'
 
   target 'Culqi_Tests' do
     inherit! :search_paths
-
-#pod 'FBSnapshotTestCase'
   end
 end

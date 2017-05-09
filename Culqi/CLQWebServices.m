@@ -19,6 +19,7 @@
 #import "CLQCard.h"
 #import "CLQPlan.h"
 #import "CLQSubscription.h"
+#import "CLQPaging.h"
 
 @implementation CLQWebServices
 
@@ -83,7 +84,7 @@
                             limit:(NSNumber *)limit
             beforeTokenIdentifier:(NSString *)beforeTokenIdentifier
              afterTokenIdentifier:(NSString *)afterTokenIdentifier
-                          success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                          success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQPaging * _Nonnull, NSArray<CLQToken *> * _Nonnull))success
                           failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
@@ -100,8 +101,18 @@
     if (afterTokenIdentifier) [parameters setObject:afterTokenIdentifier forKey:@"after"];
     
     [[CLQHTTPSessionManager manager] GET:@"tokens" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        NSDictionary *pagingData = [responseObject objectForKey:@"paging"];
+        NSArray <NSDictionary *> *dataCollection = [responseObject objectForKey:@"data"];
+        
+        NSMutableArray <CLQToken *> *tokens = [NSMutableArray array];
+        for (NSDictionary *data in dataCollection) {
+            if ([data isKindOfClass:[NSDictionary class]]) [tokens addObject:[CLQToken newWithData:data]];
+        }
+        
         if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
-                              responseObject);
+                              [CLQPaging newWithData:pagingData],
+                              tokens.copy);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
                              [CLQError newWithData:[self getBusinessErrorFromError:error]],
@@ -111,7 +122,7 @@
 
 + (void)updateTokenWithIdentifier:(NSString *)tokenIdentifier
                          metadata:(NSDictionary *)metadata
-                          success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                          success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQToken * _Nonnull))success
                           failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
@@ -120,7 +131,7 @@
     
     [[CLQHTTPSessionManager manager] PATCH:[@"tokens" stringByAppendingFormat:@"/%@", tokenIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
-                              responseObject);
+                              [CLQToken newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
                              [CLQError newWithData:[self getBusinessErrorFromError:error]],

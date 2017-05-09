@@ -16,7 +16,7 @@
     NSString *country = [data objectForKey:@"country"];
     NSString *countryCode = [data objectForKey:@"country_code"];
     NSString *website = [data objectForKey:@"website"];
-    NSString *phoneNumber = [data objectForKey:@"phoneNumber"];
+    NSString *phoneNumber = [data objectForKey:@"phone_number"];
     
     return [[CLQCardIssuer alloc] initWithName:name country:country countryCode:countryCode website:website phoneNumber:phoneNumber];
 }

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class CLQResponseHeaders, CLQError;
+@class CLQResponseHeaders, CLQError, CLQPaging;
 @class CLQToken, CLQCharge, CLQRefund, CLQCustomer, CLQCard, CLQPlan, CLQSubscription;
 @class CLQAntifraudDetails;
 
@@ -44,12 +44,12 @@ NS_ASSUME_NONNULL_BEGIN
                             limit:(NSNumber *)limit
             beforeTokenIdentifier:(NSString *)beforeTokenIdentifier
              afterTokenIdentifier:(NSString *)afterTokenIdentifier
-                          success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                          success:(void (^)(CLQResponseHeaders *responseHeaders, CLQPaging *paging, NSArray <CLQToken *> *tokens))success
                           failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)updateTokenWithIdentifier:(NSString *)tokenIdentifier
                          metadata:(NSDictionary *)metadata
-                          success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                          success:(void (^)(CLQResponseHeaders *responseHeaders, CLQToken *token))success
                           failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 #pragma mark - Charges

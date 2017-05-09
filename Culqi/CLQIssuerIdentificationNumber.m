@@ -89,7 +89,7 @@
     
     switch (cardBrand) {
         case CLQCardBrandVisa:
-            return @"visa";
+            return @"Visa";
             break;
         case CLQCardBrandMastercard:
             return @"mastercard";

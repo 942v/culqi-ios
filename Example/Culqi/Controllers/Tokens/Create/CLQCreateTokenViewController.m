@@ -1,16 +1,17 @@
 //
-//  CLQViewController.m
+//  CLQCreateTokenViewController.m
 //  Culqi
 //
-//  Created by Guillermo Saenz on 09/18/2016.
-//  Copyright (c) 2016 Guillermo Saenz. All rights reserved.
+//  Created by Guillermo Sáenz on 5/9/17.
+//  Copyright © 2017 Guillermo Saenz. All rights reserved.
 //
 
-#import "CLQViewController.h"
+#import "CLQCreateTokenViewController.h"
 
 @import Culqi;
+@import SVProgressHUD;
 
-@interface CLQViewController ()
+@interface CLQCreateTokenViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *txtFieldCardNumber;
 @property (weak, nonatomic) IBOutlet UITextField *txtFieldExpMonth;
@@ -23,12 +24,11 @@
 
 @end
 
-@implementation CLQViewController
+@implementation CLQCreateTokenViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self setTestData];
+    // Do any additional setup after loading the view.
 }
 
 - (void)didReceiveMemoryWarning {
@@ -60,10 +60,12 @@
 - (IBAction)createTokenActn:(id)sender {
     
     // TODO: validate fields
-    
+    [SVProgressHUD show];
     [[Culqi sharedInstance] createTokenWithCardNumber:self.txtFieldCardNumber.text cvv:self.txtFieldCVC.text expirationMonth:self.txtFieldExpMonth.text expirationYear:self.txtFieldExpYear.text email:self.txtFieldEmail.text metadata:nil success:^(CLQResponseHeaders * _Nonnull responseHeaders, CLQToken * _Nonnull token) {
+        [SVProgressHUD dismiss];
         NSLog(@"Did create token with identifier: %@", token.identifier);
     } failure:^(CLQResponseHeaders * _Nonnull responseHeaders, CLQError * _Nonnull businessError, NSError * _Nonnull error) {
+        [SVProgressHUD dismiss];
         NSLog(@"Error Creating token\nLocalized error: %@\nBusiness Error: %@", error.localizedDescription, businessError.merchantMessage);
     }];
 }
