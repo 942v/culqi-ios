@@ -25,9 +25,9 @@
 
 #pragma mark - Auth
 
-+ (void)setAutorizationHeaderFieldWithMerchantCode:(NSString *)merchantCode {
++ (void)setAutorizationHeaderFieldWithApiKey:(NSString *)apiKey {
     
-    [[CLQHTTPSessionManager manager].requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", merchantCode] forHTTPHeaderField:@"Authorization"];
+    [[CLQHTTPSessionManager manager].requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", apiKey] forHTTPHeaderField:@"Authorization"];
 }
 
 #pragma mark - Tokens
@@ -142,22 +142,31 @@
 #pragma mark - Charges
 
 + (void)createChargeWithAmount:(NSNumber *)amount
+                       capture:(NSNumber *)capture
                   currencyCode:(NSString *)currencyCode
+                   description:(NSString *)description
                          email:(NSString *)email
+                  installments:(NSNumber *)installments
               antifraudDetails:(CLQAntifraudDetails *)antifraudDetails
               sourceIdentifier:(NSString *)sourceIdentifier
+                      metadata:(NSDictionary *)metadata
                        success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQCharge * _Nonnull))success
                        failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
-    NSDictionary *parameters = @{
-                                 @"amount":amount,
-                                 @"currencyCode":currencyCode,
-                                 @"email":email,
-                                 @"antifraudDetails":antifraudDetails, // TODO: change for Dictionary
-                                 @"sourceIdentifier":sourceIdentifier
-                                 };
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                       amount, @"amount",
+                                       currencyCode, @"currency_code",
+                                       email, @"email",
+                                       sourceIdentifier, @"source_id",
+                                       nil];
     
-    [[CLQHTTPSessionManager manager] POST:@"charges" parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    if (antifraudDetails) [parameters setObject:antifraudDetails forKey:@"antifraud_details"]; // TODO: passthis to object
+    if (capture) [parameters setObject:capture forKey:@"capture"];
+    if (description) [parameters setObject:description forKey:@"description"];
+    if (installments) [parameters setObject:installments forKey:@"installments"];
+    if (metadata) [parameters setObject:metadata forKey:@"metadata"];
+    
+    [[CLQHTTPSessionManager manager] POST:@"charges" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
                               [CLQCharge newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -219,7 +228,7 @@
                        limit:(NSNumber *)limit
       beforeChargeIdentifier:(NSString *)beforeChargeIdentifier
        afterChargeIdentifier:(NSString *)afterChargeIdentifier
-                     success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                     success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQPaging * _Nonnull, NSArray<CLQCharge *> * _Nonnull))success
                      failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
@@ -264,8 +273,18 @@
     if (afterChargeIdentifier) [parameters setObject:afterChargeIdentifier forKey:@"after"];
     
     [[CLQHTTPSessionManager manager] GET:@"charges" parameters:parameters.copy progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        NSDictionary *pagingData = [responseObject objectForKey:@"paging"];
+        NSArray <NSDictionary *> *dataCollection = [responseObject objectForKey:@"data"];
+        
+        NSMutableArray <CLQCharge *> *charges = [NSMutableArray array];
+        for (NSDictionary *data in dataCollection) {
+            if ([data isKindOfClass:[NSDictionary class]]) [charges addObject:[CLQCharge newWithData:data]];
+        }
+        
         if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
-                              responseObject);
+                              [CLQPaging newWithData:pagingData],
+                              charges.copy);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
                              [CLQError newWithData:[self getBusinessErrorFromError:error]],
@@ -275,7 +294,7 @@
 
 + (void)updateChargeWithIdentifier:(NSString *)chargeIdentifier
                           metadata:(NSDictionary *)metadata
-                           success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, NSDictionary * _Nonnull))success
+                           success:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQCharge * _Nonnull))success
                            failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
@@ -284,7 +303,7 @@
     
     [[CLQHTTPSessionManager manager] PATCH:[@"charges" stringByAppendingFormat:@"/%@", chargeIdentifier] parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
-                              responseObject);
+                              [CLQCharge newWithData:responseObject]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
                              [CLQError newWithData:[self getBusinessErrorFromError:error]],
@@ -293,11 +312,11 @@
 }
 
 + (void)deleteChargeWithIdentifier:(NSString *)chargeIdentifier
-                           success:(void (^)())success
+                           success:(nonnull void (^)(CLQResponseHeaders * _Nonnull))success
                            failure:(nonnull void (^)(CLQResponseHeaders * _Nonnull, CLQError * _Nonnull, NSError * _Nonnull))failure {
     
     [[CLQHTTPSessionManager manager] DELETE:[@"charges" stringByAppendingFormat:@"/%@", chargeIdentifier] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if (success) success ();// TODO: shouldn't this be a 204?
+        if (success) success ([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]]);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure) failure([CLQResponseHeaders newWithData:[self headersFromResponseTask:task]],
                              [CLQError newWithData:[self getBusinessErrorFromError:error]],

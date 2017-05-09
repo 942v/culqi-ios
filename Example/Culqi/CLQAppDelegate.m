@@ -15,8 +15,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // We start the SDK with our merchant code
-#warning Don't forget to put your merchant code. Get it here: https://integ-panel.culqi.com/#/registro
-    [[Culqi sharedInstance] setMerchantCode:@"<CHANGE THIS FOR YOUR MERCHANT CODE>"];
+#warning Don't forget to put your secret key. Get it here: https://integ-panel.culqi.com/#/registro
+    [Culqi setApiKey:@"sk_test_OvT5SkJwkrgHepbp"];// @"<CHANGE THIS TO YOUR SECRET KEY>"];
     
     return YES;
 }

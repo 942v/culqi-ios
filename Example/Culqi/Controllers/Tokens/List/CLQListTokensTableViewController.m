@@ -32,7 +32,7 @@
     [[Culqi sharedInstance] getTokensWithFromUnixDate:nil
                                            toUnixDate:nil
                                             cardBrand:nil
-                                             cardType:nil
+                                             cardType:CLQCardTypeUnkown
                                            deviceType:nil
                                                   bin:nil
                                           countryCode:nil
@@ -40,15 +40,15 @@
                                 beforeTokenIdentifier:nil
                                  afterTokenIdentifier:nil
                                               success:^(CLQResponseHeaders * _Nonnull responseHeaders, CLQPaging * _Nonnull paging, NSArray<CLQToken *> * _Nonnull tokens) {
-        [SVProgressHUD dismiss];
-        NSLog(@"Did find tokens: %@", tokens);
-        self.tokens = tokens;
-        [self.tableView reloadData];
-    }
+                                                  [SVProgressHUD dismiss];
+                                                  NSLog(@"Did find tokens: %@", tokens);
+                                                  self.tokens = tokens;
+                                                  [self.tableView reloadData];
+                                              }
                                               failure:^(CLQResponseHeaders * _Nonnull responseHeaders, CLQError * _Nonnull businessError, NSError * _Nonnull error) {
-        [SVProgressHUD dismiss];
-        NSLog(@"Error getting tokens \nLocalized error: %@\nBusiness Error: %@", error.localizedDescription, businessError.merchantMessage);
-    }];
+                                                  [SVProgressHUD dismiss];
+                                                  NSLog(@"Error getting tokens \nLocalized error: %@\nBusiness Error: %@", error.localizedDescription, businessError.merchantMessage);
+                                              }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -70,6 +70,12 @@
     cell.textLabel.text = token.email;
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    CLQToken *token = [self.tokens objectAtIndex:indexPath.row];
+    if ([self.delegate respondsToSelector:@selector(listTokensTableViewController:didSelectTokenWithIdentifier:)]) [self.delegate listTokensTableViewController:self didSelectTokenWithIdentifier:token.identifier];
 }
 
 #pragma mark - Navigation

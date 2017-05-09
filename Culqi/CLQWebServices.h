@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Auth
 
-+ (void)setAutorizationHeaderFieldWithMerchantCode:(NSString *)merchantCode;
++ (void)setAutorizationHeaderFieldWithApiKey:(NSString *)apiKey;
 
 #pragma mark - Tokens
 
@@ -55,10 +55,14 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Charges
 
 + (void)createChargeWithAmount:(NSNumber *)amount
+                       capture:(NSNumber *)capture
                   currencyCode:(NSString *)currencyCode
+                   description:(NSString *)description
                          email:(NSString *)email
+                  installments:(NSNumber *)installments
               antifraudDetails:(CLQAntifraudDetails *)antifraudDetails
               sourceIdentifier:(NSString *)sourceIdentifier
+                      metadata:(NSDictionary *)metadata
                        success:(void (^)(CLQResponseHeaders *responseHeaders, CLQCharge *charge))success
                        failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
@@ -104,16 +108,16 @@ NS_ASSUME_NONNULL_BEGIN
                        limit:(NSNumber *)limit
       beforeChargeIdentifier:(NSString *)beforeChargeIdentifier
        afterChargeIdentifier:(NSString *)afterChargeIdentifier
-                     success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                     success:(void (^)(CLQResponseHeaders *responseHeaders, CLQPaging *paging, NSArray <CLQCharge *> *charges))success
                      failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)updateChargeWithIdentifier:(NSString *)chargeIdentifier
                           metadata:(NSDictionary *)metadata
-                           success:(void (^)(CLQResponseHeaders *responseHeaders, NSDictionary *responseObject))success
+                           success:(void (^)(CLQResponseHeaders *responseHeaders, CLQCharge *charge))success
                            failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 + (void)deleteChargeWithIdentifier:(NSString *)chargeIdentifier
-                           success:(void (^)())success
+                           success:(void (^)(CLQResponseHeaders *responseHeaders))success
                            failure:(void (^)(CLQResponseHeaders *responseHeaders, CLQError *businessError, NSError *error))failure;
 
 #pragma mark - Refunds

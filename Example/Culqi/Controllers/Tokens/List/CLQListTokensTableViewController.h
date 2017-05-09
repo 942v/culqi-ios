@@ -8,6 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol CLQListTokensTableViewControllerDelegate;
+
 @interface CLQListTokensTableViewController : UITableViewController
+
+@property (nonatomic, weak) id <CLQListTokensTableViewControllerDelegate> delegate;
+
+@end
+
+@protocol CLQListTokensTableViewControllerDelegate <NSObject>
+
+- (void)listTokensTableViewController:(CLQListTokensTableViewController *)listTokensTableViewController didSelectTokenWithIdentifier:(NSString *)tokenIdentifier;
 
 @end
