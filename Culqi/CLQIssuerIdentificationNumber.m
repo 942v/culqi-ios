@@ -82,7 +82,7 @@
         return CLQCardBrandDinersClub;
     }
     
-    return CLQCardBrandUnkown;
+    return CLQCardBrandUnknown;
 }
 
 + (NSString *)getCardBrandKeyForEnum:(CLQCardBrand)cardBrand {
@@ -116,7 +116,7 @@
         return CLQCardTypePrepagada;
     }
     
-    return CLQCardTypeUnkown;
+    return CLQCardTypeUnknown;
 }
 
 + (NSString *)getCardTypeKeyForEnum:(CLQCardType)cardType {

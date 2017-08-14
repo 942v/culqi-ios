@@ -9,7 +9,7 @@
 #import "CLQBaseModelObject.h"
 
 typedef enum : NSUInteger {
-    CLQCardBrandUnkown,
+    CLQCardBrandUnknown,
     CLQCardBrandVisa,
     CLQCardBrandMastercard,
     CLQCardBrandAmericanExpress,
@@ -17,7 +17,7 @@ typedef enum : NSUInteger {
 } CLQCardBrand;
 
 typedef enum : NSUInteger {
-    CLQCardTypeUnkown,
+    CLQCardTypeUnknown,
     CLQCardTypeCredito,
     CLQCardTypeDebito,
     CLQCardTypePrepagada
