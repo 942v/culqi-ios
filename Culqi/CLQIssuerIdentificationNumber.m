@@ -72,13 +72,13 @@
 
 + (CLQCardBrand)getCardBrandEnumForKey:(NSString *)cardBrand {
     
-    if ([cardBrand isEqualToString:@"visa"]) {
+    if ([cardBrand isEqualToString:@"Visa"]) {
         return CLQCardBrandVisa;
-    }else if ([cardBrand isEqualToString:@"mastercard"]) {
+    }else if ([cardBrand isEqualToString:@"MasterCard"]) {
         return CLQCardBrandMastercard;
-    }else if ([cardBrand isEqualToString:@"american_express"]) {
+    }else if ([cardBrand isEqualToString:@"Amex"]) {
         return CLQCardBrandAmericanExpress;
-    }else if ([cardBrand isEqualToString:@"diners_club"]) {
+    }else if ([cardBrand isEqualToString:@"Diners"]) {
         return CLQCardBrandDinersClub;
     }
     
@@ -92,13 +92,13 @@
             return @"Visa";
             break;
         case CLQCardBrandMastercard:
-            return @"mastercard";
+            return @"MasterCard";
             break;
         case CLQCardBrandAmericanExpress:
-            return @"american_express";
+            return @"Amex";
             break;
         case CLQCardBrandDinersClub:
-            return @"diners_club";
+            return @"Diners";
             break;
         default:
             return NULL;

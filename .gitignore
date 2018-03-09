@@ -1,7 +1,5 @@
-# OS X
-.DS_Store
-
 # Xcode
+.DS_Store
 build/
 *.pbxuser
 !default.pbxuser
@@ -16,16 +14,10 @@ build/
 *.xcworkspace/xcshareddata/
 xcuserstate
 *.xcuserdatad/
-*.xccheckout
 profile
 *.moved-aside
 DerivedData
 .idea/
-*.hmap
-*.ipa
-
-# Bundler
-.bundle
 
 Pods/
 Podfile.lock
