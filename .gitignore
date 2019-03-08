@@ -1,4 +1,5 @@
 # Xcode
+#ProAtomic
 .DS_Store
 build/
 *.pbxuser
@@ -21,3 +22,23 @@ DerivedData
 
 Pods/
 Podfile.lock
+
+**/AppIcon.appiconset/*.png
+
+# fastlane specific
+**/fastlane/report.xml
+
+# deliver temporary files
+**/fastlane/Preview.html
+
+# snapshot generated screenshots
+**/fastlane/screenshots
+
+# scan temporary files
+**/fastlane/test_output
+
+#  compilation files
+**/fastlane/compilation/
+
+# fastlane .env
+**/fastlane/.env

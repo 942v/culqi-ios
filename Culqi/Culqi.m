@@ -22,7 +22,7 @@
 
 @implementation Culqi
 
-static NSString *CLQCheckoutBaseURLString = @"https://api.culqi.com/v2/";
+static NSString *CLQCheckoutBaseURLString = @"https://secure.culqi.com/v2/";
 
 static Culqi *SINGLETON = nil;
 
@@ -43,14 +43,6 @@ static bool isFirstAccess = YES;
 #pragma mark - Life Cycle
 
 + (id) allocWithZone:(NSZone *)zone {
-    return [self sharedInstance];
-}
-
-+ (id)copyWithZone:(struct _NSZone *)zone {
-    return [self sharedInstance];
-}
-
-+ (id)mutableCopyWithZone:(struct _NSZone *)zone {
     return [self sharedInstance];
 }
 
