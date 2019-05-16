@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
 s.name             = 'Culqi'
-s.version          = '2.1'
+s.version          = '2.1.1'
 s.summary          = 'Recibe pagos con tarjeta de crédito, débito y prepagadas de todas las marcas.'
 s.description      = 'Acepta pagos con tarjetas de crédito o débito, dándole a tu cliente la experiencia de compra más simple en tu página web y aplicación móvil.'
 
