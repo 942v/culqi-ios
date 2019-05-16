@@ -15,7 +15,7 @@ s.description      = 'Acepta pagos con tarjetas de crédito o débito, dándole 
 s.homepage         = 'https://www.culqi.com'
 s.license          = { :type => 'MIT', :file => 'LICENSE' }
 s.author           = { 'Guillermo Sáenz' => 'gsaenz@proatomicdev.com' }
-s.source           = { :git => 'https://github.com/culqi/culqi-ios.git', :tag => s.version.to_s }
+s.source           = { :git => 'https://github.com/942v/culqi-ios.git', :tag => s.version.to_s }
 
 s.ios.deployment_target = '8.0'
 
